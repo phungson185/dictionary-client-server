@@ -17,7 +17,8 @@
 #define SERV_PORT 3000 /*port*/
 #define MAX 1000
 
-typedef enum {
+typedef enum
+{
     ERROR,
     SUCCESS
 } RES;
@@ -31,7 +32,7 @@ GtkTreeIter Iter;
 
 GtkEntry *log_acc, *log_pass, *reg_acc, *reg_pass, *retype_pass, *searchentry, *entry_newword, *entry_meanword, *entry_del;
 
-GtkWidget *reg_noti, *log_noti, *textview1, *textview2, *textview3, *textview4, *textview_his;
+GtkWidget *reg_noti, *log_noti, *username, *textview1, *textview2, *textview3, *textview4, *textview_his;
 
 BTA *dict;
 BTA *note;
@@ -53,6 +54,7 @@ void set_label_empty_text(GtkWidget *widget);
 void translate();
 void delay(int number_of_seconds);
 void make_protocol(char *k, char *i1, char *i2);
+void show_main_window();
 
 int main_handler(int argc, char **argv);
 

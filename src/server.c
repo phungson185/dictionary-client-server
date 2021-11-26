@@ -17,6 +17,9 @@
 #define LISTENQ 8      /*maximum number of client connections */
 
 int connfd;
+char username[MAX];
+char suggest_protocol_str[MAX];
+
 char key[MAX];
 char info1[MAX];
 char info2[MAX];
@@ -24,6 +27,8 @@ char info2[MAX];
 char recv_info[MAX];
 
 BTA *user;
+BTA *dict;
+BTA *user_dict;
 
 void sig_chld(int signo)
 {
@@ -57,9 +62,17 @@ void make_protocol(char *k, char *mesg)
     send(connfd, pr, MAX, 0);
 }
 
-void registerr()
+char *make_dict_path(char *username)
 {
     char *path = (char *)malloc(sizeof(char) * MAX);
+    strcpy(path, "../src/data/");
+    strcat(path, username);
+    strcat(path, "_dict.bt");
+    return path;
+}
+
+void registerr()
+{
     int rsize;
     user = btopn("../src/data/user.bt", 0, 0);
     btpos(user, ZSTART);
@@ -69,10 +82,7 @@ void registerr()
     {
         if (!btins(user, info1, info2, MAX))
         {
-            strcpy(path, "../src/data/");
-            strcat(path, info1);
-            strcat(path, "_dict.bt");
-            if (btcrt(path, 0, 0) == NULL)
+            if (btcrt(make_dict_path(info1), 0, 0) == NULL)
             {
                 perror("Lỗi không thể tạo file từ điển cá nhân");
                 return -1;
@@ -82,7 +92,6 @@ void registerr()
         else
             make_protocol("NOKE", "Đăng ký thất bại, chương trình lỗi...");
     }
-    free(path);
     btcls(user);
 }
 
@@ -102,9 +111,62 @@ void login()
         if (strcmp(pass, info2) != 0)
             make_protocol("NOKE", "Mật khẩu không đúng");
         else
+        {
+            strcpy(username, info1);
             make_protocol("OKE", NULL);
+        }
     }
     btcls(user);
+}
+
+void suggest_query(BTA *b)
+{
+    char kd[2];
+    int rsize, k = 0, count = 0;
+    char *eng = (char *)malloc(sizeof(char) * MAX);
+    char *vie = (char *)malloc(sizeof(char) * MAX);
+    kd[0] = info1[0];
+    kd[1] = '\0';
+
+    if (!btsel(b, kd, vie, sizeof(char *), &rsize))
+    {
+        while (!btseln(b, eng, vie, MAX, &rsize))
+        {
+            if (eng[0] != info1[0])
+                break;
+            for (int i = 0; i < strlen(info1); i++)
+            {
+                if (eng[i] != info1[i])
+                {
+                    k = 1;
+                    break;
+                }
+            }
+            if (k == 0)
+            {
+                count++;
+                strcat(suggest_protocol_str,"|");
+                strcat(suggest_protocol_str,eng);
+            }
+            k = 0;
+            if (count > 20)
+                break;
+        }
+    }
+    free(eng);
+    free(vie);
+}
+
+void suggestion()
+{
+    dict = btopn("../src/data/dict.bt", 0, 0);
+    user_dict = btopn(make_dict_path(username), 0, 0);
+    strcpy(suggest_protocol_str,"ENG");
+    suggest_query(user_dict);
+    suggest_query(dict);
+    send(connfd, suggest_protocol_str, MAX, 0);
+    btcls(dict);
+    btcls(user_dict);
 }
 
 int main(int argc, char **argv)
@@ -161,6 +223,8 @@ int main(int argc, char **argv)
                     registerr();
                 else if (strcmp("LOG", key) == 0)
                     login();
+                else if (strcmp("SUG", key) == 0)
+                    suggestion();
             }
 
             if (n < 0)

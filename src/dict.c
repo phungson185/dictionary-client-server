@@ -16,17 +16,6 @@ int main_handler(int argc, char **argv)
     log_pass = GTK_WIDGET(gtk_builder_get_object(builder, "log_pass"));
     log_noti = GTK_WIDGET(gtk_builder_get_object(builder, "log_noti"));
 
-    // searchentry = GTK_WIDGET(gtk_builder_get_object(builder, "searchentry"));
-
-    // textview1 = GTK_WIDGET(gtk_builder_get_object(builder, "textview1"));
-    // textview_his = GTK_WIDGET(gtk_builder_get_object(builder, "textview_his"));
-
-    // comple = gtk_entry_completion_new();
-    // gtk_entry_completion_set_text_column(comple, 0);
-    // list = gtk_list_store_new(1, G_TYPE_STRING);
-    // gtk_entry_completion_set_model(comple, GTK_TREE_MODEL(list));
-    // gtk_entry_set_completion(GTK_ENTRY(searchentry), comple);
-
     // g_signal_connect(reg_acc, "key_press_event", G_CALLBACK(set_label_empty_text(reg_noti)), NULL);
     // g_signal_connect(reg_pass, "key_press_event", G_CALLBACK(set_label_empty_text(reg_noti)), NULL);
     // g_signal_connect(retype_pass, "key_press_event", G_CALLBACK(set_label_empty_text(reg_noti)), NULL);
@@ -145,52 +134,70 @@ void login()
         make_protocol("LOG", info1, info2);
         if (strcmp(key, "OKE") == 0)
         {
-            label_set_text(SUCCESS, log_noti, "Đăng nhập thành công");
+            show_main_window();
         }
         else if (strcmp(key, "NOKE") == 0)
             label_set_text(ERROR, log_noti, info1);
     }
 }
 
+void show_main_window()
+{
+    GtkBuilder *builder;
+
+    builder = gtk_builder_new_from_file("../ui/dict-app.glade");
+
+    window_main = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
+    gtk_builder_connect_signals(builder, NULL);
+
+    searchentry = GTK_WIDGET(gtk_builder_get_object(builder, "searchentry"));
+
+    textview1 = GTK_WIDGET(gtk_builder_get_object(builder, "textview1"));
+    textview_his = GTK_WIDGET(gtk_builder_get_object(builder, "textview_his"));
+    username = GTK_WIDGET(gtk_builder_get_object(builder, "username"));
+
+    gtk_label_set_text(GTK_LABEL(username), info1);
+
+    comple = gtk_entry_completion_new();
+    gtk_entry_completion_set_text_column(comple, 0);
+    list = gtk_list_store_new(1, G_TYPE_STRING);
+    gtk_entry_completion_set_model(comple, GTK_TREE_MODEL(list));
+    gtk_entry_set_completion(GTK_ENTRY(searchentry), comple);
+
+    g_object_unref(builder);
+    gtk_widget_show(window_main);
+    gtk_widget_hide(window_login);
+
+    g_signal_connect(searchentry, "key_press_event", G_CALLBACK(on_key_press), NULL);
+    g_signal_connect(window_main, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+
+}
+
 void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
-    char *eng = (char *)malloc(sizeof(char) * MAX);
-    char *vie = (char *)malloc(sizeof(char) * MAX);
+    printf("sdfsdfdsf");
+    char*pr = (char*)malloc(sizeof(char)*MAX);
     gchar gettext[100];
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
-    int rsize;
-    int k = 0, count = 0;
-    btpos(dict, ZSTART);
-    gtk_list_store_clear(list);
+    int text_length = strlen(gettext);
+    if (event->keyval != GDK_KEY_BackSpace)
+    {
+        gettext[text_length]=event->keyval;
+        gettext[text_length+1]='\0';
+    }
     if (strcmp(gettext, "") == 0)
     {
         set_mean_textview_text(textview1, "");
     }
     else
     {
-        while (!btseln(dict, eng, vie, MAX, &rsize))
-        {
-            for (int i = 0; i < strlen(gettext); i++)
-            {
-                if (eng[i] != gettext[i])
-                {
-                    k = 1;
-                    break;
-                }
-            }
-            if (k == 0)
-            {
-                count++;
-                gtk_list_store_append(list, &Iter);
-                gtk_list_store_set(list, &Iter, 0, eng, -1);
-            }
-            k = 0;
-            if (count > 20)
-                break;
-        }
+        strcpy(pr,"SUG|");
+        strcat(pr,gettext);
+        send(sockfd, pr, MAX, 0);
+        recv(sockfd, recv_info, MAX, 0);
+        puts(recv_info);
     }
-    free(eng);
-    free(vie);
+
 }
 
 void set_mean_textview_text(GtkWidget *textview, char *text)

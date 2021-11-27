@@ -55,7 +55,7 @@ CMAKE_BINARY_DIR = /home/sonphung/dictionary-client-server/build
 # The main recursive "all" target.
 all: CMakeFiles/client.dir/all
 all: CMakeFiles/server.dir/all
-all: CMakeFiles/init_db.dir/all
+all: CMakeFiles/init.dir/all
 
 .PHONY : all
 
@@ -67,7 +67,7 @@ preinstall:
 # The main recursive "clean" target.
 clean: CMakeFiles/client.dir/clean
 clean: CMakeFiles/server.dir/clean
-clean: CMakeFiles/init_db.dir/clean
+clean: CMakeFiles/init.dir/clean
 
 .PHONY : clean
 
@@ -126,31 +126,31 @@ CMakeFiles/server.dir/clean:
 .PHONY : CMakeFiles/server.dir/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/init_db.dir
+# Target rules for target CMakeFiles/init.dir
 
 # All Build rule for target.
-CMakeFiles/init_db.dir/all:
-	$(MAKE) -f CMakeFiles/init_db.dir/build.make CMakeFiles/init_db.dir/depend
-	$(MAKE) -f CMakeFiles/init_db.dir/build.make CMakeFiles/init_db.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/sonphung/dictionary-client-server/build/CMakeFiles --progress-num=4,5 "Built target init_db"
-.PHONY : CMakeFiles/init_db.dir/all
+CMakeFiles/init.dir/all:
+	$(MAKE) -f CMakeFiles/init.dir/build.make CMakeFiles/init.dir/depend
+	$(MAKE) -f CMakeFiles/init.dir/build.make CMakeFiles/init.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/sonphung/dictionary-client-server/build/CMakeFiles --progress-num=4,5 "Built target init"
+.PHONY : CMakeFiles/init.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/init_db.dir/rule: cmake_check_build_system
+CMakeFiles/init.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/sonphung/dictionary-client-server/build/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/init_db.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/init.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/sonphung/dictionary-client-server/build/CMakeFiles 0
-.PHONY : CMakeFiles/init_db.dir/rule
+.PHONY : CMakeFiles/init.dir/rule
 
 # Convenience name for target.
-init_db: CMakeFiles/init_db.dir/rule
+init: CMakeFiles/init.dir/rule
 
-.PHONY : init_db
+.PHONY : init
 
 # clean rule for target.
-CMakeFiles/init_db.dir/clean:
-	$(MAKE) -f CMakeFiles/init_db.dir/build.make CMakeFiles/init_db.dir/clean
-.PHONY : CMakeFiles/init_db.dir/clean
+CMakeFiles/init.dir/clean:
+	$(MAKE) -f CMakeFiles/init.dir/build.make CMakeFiles/init.dir/clean
+.PHONY : CMakeFiles/init.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

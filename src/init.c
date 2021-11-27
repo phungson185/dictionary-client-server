@@ -13,8 +13,8 @@ int main()
     char *line = (char *)malloc(sizeof(char) * MAX);
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
-    dict = btcrt("../src/data/dict.bt", 0, 0);
-    user = btcrt("../src/data/user.bt", 0, 0);
+    dict = btcrt("../db/dict.bt", 0, 0);
+    user = btcrt("../db/user.bt", 0, 0);
     if ((p = fopen("../db/dict.txt", "r")) == NULL)
     {
         printf("Lỗi không thể mở file.\n");

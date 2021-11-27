@@ -65,7 +65,7 @@ void make_protocol(char *k, char *mesg)
 char *make_dict_path(char *username)
 {
     char *path = (char *)malloc(sizeof(char) * MAX);
-    strcpy(path, "../src/data/");
+    strcpy(path, "../db/userDict/");
     strcat(path, username);
     strcat(path, "_dict.bt");
     return path;
@@ -74,7 +74,7 @@ char *make_dict_path(char *username)
 void registerr()
 {
     int rsize;
-    user = btopn("../src/data/user.bt", 0, 0);
+    user = btopn("../db/user.bt", 0, 0);
     btpos(user, ZSTART);
     if (!btsel(user, info1, info2, MAX, &rsize))
         make_protocol("NOKE", "Tài khoản đã tồn tại, vui lòng chọn tài khoản khác");
@@ -99,7 +99,7 @@ void login()
 {
     char *pass = (char *)malloc(sizeof(char) * MAX);
     int rsize;
-    user = btopn("../src/data/user.bt", 0, 0);
+    user = btopn("../db/user.bt", 0, 0);
     btpos(user, ZSTART);
 
     if (btsel(user, info1, pass, MAX, &rsize))
@@ -159,7 +159,7 @@ void suggest_query(BTA *b)
 
 void suggestion()
 {
-    dict = btopn("../src/data/dict.bt", 0, 0);
+    dict = btopn("../db/dict.bt", 0, 0);
     user_dict = btopn(make_dict_path(username), 0, 0);
     strcpy(suggest_protocol_str,"ENG");
     suggest_query(user_dict);

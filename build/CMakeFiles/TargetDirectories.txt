@@ -2,4 +2,4 @@
 /home/sonphung/dictionary-client-server/build/CMakeFiles/edit_cache.dir
 /home/sonphung/dictionary-client-server/build/CMakeFiles/client.dir
 /home/sonphung/dictionary-client-server/build/CMakeFiles/server.dir
-/home/sonphung/dictionary-client-server/build/CMakeFiles/init_db.dir
+/home/sonphung/dictionary-client-server/build/CMakeFiles/init.dir

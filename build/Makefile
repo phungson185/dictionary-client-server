@@ -137,17 +137,17 @@ server/fast:
 .PHONY : server/fast
 
 #=============================================================================
-# Target rules for targets named init_db
+# Target rules for targets named init
 
 # Build rule for target.
-init_db: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 init_db
-.PHONY : init_db
+init: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 init
+.PHONY : init
 
 # fast build rule for target.
-init_db/fast:
-	$(MAKE) -f CMakeFiles/init_db.dir/build.make CMakeFiles/init_db.dir/build
-.PHONY : init_db/fast
+init/fast:
+	$(MAKE) -f CMakeFiles/init.dir/build.make CMakeFiles/init.dir/build
+.PHONY : init/fast
 
 src/client.o: src/client.c.o
 
@@ -176,33 +176,6 @@ src/client.c.s:
 	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/client.c.s
 .PHONY : src/client.c.s
 
-src/data/init_db.o: src/data/init_db.c.o
-
-.PHONY : src/data/init_db.o
-
-# target to build an object file
-src/data/init_db.c.o:
-	$(MAKE) -f CMakeFiles/init_db.dir/build.make CMakeFiles/init_db.dir/src/data/init_db.c.o
-.PHONY : src/data/init_db.c.o
-
-src/data/init_db.i: src/data/init_db.c.i
-
-.PHONY : src/data/init_db.i
-
-# target to preprocess a source file
-src/data/init_db.c.i:
-	$(MAKE) -f CMakeFiles/init_db.dir/build.make CMakeFiles/init_db.dir/src/data/init_db.c.i
-.PHONY : src/data/init_db.c.i
-
-src/data/init_db.s: src/data/init_db.c.s
-
-.PHONY : src/data/init_db.s
-
-# target to generate assembly for a file
-src/data/init_db.c.s:
-	$(MAKE) -f CMakeFiles/init_db.dir/build.make CMakeFiles/init_db.dir/src/data/init_db.c.s
-.PHONY : src/data/init_db.c.s
-
 src/dict.o: src/dict.c.o
 
 .PHONY : src/dict.o
@@ -229,6 +202,33 @@ src/dict.s: src/dict.c.s
 src/dict.c.s:
 	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/dict.c.s
 .PHONY : src/dict.c.s
+
+src/init.o: src/init.c.o
+
+.PHONY : src/init.o
+
+# target to build an object file
+src/init.c.o:
+	$(MAKE) -f CMakeFiles/init.dir/build.make CMakeFiles/init.dir/src/init.c.o
+.PHONY : src/init.c.o
+
+src/init.i: src/init.c.i
+
+.PHONY : src/init.i
+
+# target to preprocess a source file
+src/init.c.i:
+	$(MAKE) -f CMakeFiles/init.dir/build.make CMakeFiles/init.dir/src/init.c.i
+.PHONY : src/init.c.i
+
+src/init.s: src/init.c.s
+
+.PHONY : src/init.s
+
+# target to generate assembly for a file
+src/init.c.s:
+	$(MAKE) -f CMakeFiles/init.dir/build.make CMakeFiles/init.dir/src/init.c.s
+.PHONY : src/init.c.s
 
 src/server.o: src/server.c.o
 
@@ -267,16 +267,16 @@ help:
 	@echo "... edit_cache"
 	@echo "... client"
 	@echo "... server"
-	@echo "... init_db"
+	@echo "... init"
 	@echo "... src/client.o"
 	@echo "... src/client.i"
 	@echo "... src/client.s"
-	@echo "... src/data/init_db.o"
-	@echo "... src/data/init_db.i"
-	@echo "... src/data/init_db.s"
 	@echo "... src/dict.o"
 	@echo "... src/dict.i"
 	@echo "... src/dict.s"
+	@echo "... src/init.o"
+	@echo "... src/init.i"
+	@echo "... src/init.s"
 	@echo "... src/server.o"
 	@echo "... src/server.i"
 	@echo "... src/server.s"

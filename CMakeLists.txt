@@ -23,8 +23,8 @@ add_definitions(${GTK3_CFLAGS_OTHER} -rdynamic)
 
 message(STATUS "Include: ${GTK3_INCLUDE_DIRS}\n LIB_DIR: ${GTK3_LIBRARY_DIRS} \n CFLAGS_OTHERS: ${GTK3_CFLAGS_OTHER} \n LIBS: ${GTK3_LIBRARIES}")
 
-add_executable(init_db ${PROJECT_SOURCE_DIR}/src/data/init_db.c)
-target_link_libraries(init_db bt)
+add_executable(init ${PROJECT_SOURCE_DIR}/src/init.c)
+target_link_libraries(init bt)
 
 add_executable(server ${PROJECT_SOURCE_DIR}/src/server.c)
 target_link_libraries(server ${GTK3_LIBRARIES} fdr bt)

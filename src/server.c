@@ -170,6 +170,26 @@ void suggestion()
     btcls(user_dict);
 }
 
+void translate(){
+    dict = btopn("../db/dict.bt", 0, 0);
+    user_dict = btopn(make_dict_path(username), 0, 0);
+    char *value = (char *)malloc(sizeof(char) * MAX);
+    btpos(dict, ZSTART);
+    btpos(user_dict, ZSTART);
+    int rsize;
+    if (btsel(user_dict, info1, value, MAX, &rsize)){
+        if (btsel(dict, info1, value, MAX, &rsize))
+                make_protocol("NOKE", "Không tìm thấy từ");
+        else
+        {
+            make_protocol("VIE", value);
+        }
+    }
+    free(value);
+    btcls(dict);
+    btcls(user_dict);
+}
+
 int main(int argc, char **argv)
 {
     int listenfd, n;
@@ -226,6 +246,8 @@ int main(int argc, char **argv)
                     login();
                 else if (strcmp("SUG", key) == 0)
                     suggestion();
+                else if (strcmp("ENG", key) ==0)
+                    translate();
             }
 
             if (n < 0)

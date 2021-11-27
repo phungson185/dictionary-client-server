@@ -223,9 +223,6 @@ void set_mean_textview_text(GtkWidget *textview, char *text)
 
 void translate()
 {
-    char *value = (char *)malloc(sizeof(char) * MAX);
-    char *buffer = (char *)malloc(sizeof(char) * MAX);
-    btpos(dict, ZSTART);
     int rsize;
     gchar gettext[MAX];
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
@@ -235,26 +232,12 @@ void translate()
     }
     else
     {
-        if (btsel(dict, gettext, value, MAX, &rsize))
-            set_mean_textview_text(textview1, "Không tìm thấy từ bạn cần tìm");
-        else
-        {
-            if (strcmp(buftrans, gettext) != 0)
-            {
-                strcpy(buftrans, gettext);
-                strcpy(buffer, gettext);
-                strcat(buffer, "\n");
-                strcat(buffer, htr);
-                strcpy(htr, buffer);
-            }
-            set_mean_textview_text(textview1, value);
-        }
+        make_protocol("ENG",gettext, NULL);
+        if (strcmp(key, "NOKE") == 0)
+            set_mean_textview_text(textview1, info1);
+        else if (strcmp(key, "VIE") == 0)
+            set_mean_textview_text(textview1, info1);
     }
-
-    set_mean_textview_text(textview_his, htr);
-
-    free(value);
-    free(buffer);
 }
 
 void clear_history()

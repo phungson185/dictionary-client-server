@@ -7,9 +7,11 @@
 
 ## Run
 ```
-cd b
+cd build
+rm * -rf
 cmake ..
 make
-./data
-./dict
+./init
+./server
+./client
 ``` 

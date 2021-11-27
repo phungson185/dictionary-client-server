@@ -8,13 +8,11 @@ int main()
 {
     btinit();
     BTA *dict;
-    BTA *user;
     FILE *p;
     char *line = (char *)malloc(sizeof(char) * MAX);
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
     dict = btcrt("../db/dict.bt", 0, 0);
-    user = btcrt("../db/user.bt", 0, 0);
     if ((p = fopen("../db/dict.txt", "r")) == NULL)
     {
         printf("Lỗi không thể mở file.\n");
@@ -36,6 +34,5 @@ int main()
     free(line);
     free(eng);
     free(vie);
-    btcls(user);
     btcls(dict);
 }

@@ -1,1 +1,0 @@
-/usr/bin/cc -g  -rdynamic CMakeFiles/init_db.dir/src/data/init_db.c.o  -o init_db   -L/home/sonphung/dictionary-client-server/lib/blib  -L/home/sonphung/dictionary-client-server/cmake-btree  -L/usr/local/lib  -Wl,-rpath,/home/sonphung/dictionary-client-server/lib/blib:/home/sonphung/dictionary-client-server/cmake-btree:/usr/local/lib -lbt 

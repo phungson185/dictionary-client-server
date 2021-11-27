@@ -26,7 +26,7 @@ jval.h
 
 ../lib/jval.h
 
-/home/dung/dictionary-client-server/src/server.c
+/home/sonphung/dictionary-client-server/src/server.c
 stdlib.h
 -
 stdio.h

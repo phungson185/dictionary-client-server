@@ -5,4 +5,4 @@ CMakeFiles/init_db.dir/src/data/init_db.c.o
  ../cmake-btree/inc/bc.h
  ../cmake-btree/inc/bt.h
  ../cmake-btree/inc/btree.h
- /home/dung/dictionary-client-server/src/data/init_db.c
+ /home/sonphung/dictionary-client-server/src/data/init_db.c

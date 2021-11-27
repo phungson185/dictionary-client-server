@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/dung/dictionary-client-server/src/data/init_db.c" "/home/dung/dictionary-client-server/build/CMakeFiles/init_db.dir/src/data/init_db.c.o"
+  "/home/sonphung/dictionary-client-server/src/data/init_db.c" "/home/sonphung/dictionary-client-server/build/CMakeFiles/init_db.dir/src/data/init_db.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 
@@ -12,7 +12,7 @@ set(CMAKE_C_COMPILER_ID "GNU")
 set(CMAKE_C_TARGET_INCLUDE_PATH
   "../lib"
   "../cmake-btree/inc"
-  "/usr/include/gtk-3.0"
+  "/usr/local/include/gtk-3.0"
   "/usr/include/at-spi2-atk/2.0"
   "/usr/include/at-spi-2.0"
   "/usr/include/dbus-1.0"

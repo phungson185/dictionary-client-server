@@ -170,20 +170,18 @@ void show_main_window()
 
     g_signal_connect(searchentry, "key_press_event", G_CALLBACK(on_key_press), NULL);
     g_signal_connect(window_main, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-
 }
 
 void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
-    printf("sdfsdfdsf");
-    char*pr = (char*)malloc(sizeof(char)*MAX);
+    char *pr = (char *)malloc(sizeof(char) * MAX);
     gchar gettext[100];
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
     int text_length = strlen(gettext);
     if (event->keyval != GDK_KEY_BackSpace)
     {
-        gettext[text_length]=event->keyval;
-        gettext[text_length+1]='\0';
+        gettext[text_length] = event->keyval;
+        gettext[text_length + 1] = '\0';
     }
     if (strcmp(gettext, "") == 0)
     {
@@ -191,13 +189,23 @@ void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
     }
     else
     {
-        strcpy(pr,"SUG|");
-        strcat(pr,gettext);
+        gtk_list_store_clear(list);
+        strcpy(pr, "SUG|");
+        strcat(pr, gettext);
         send(sockfd, pr, MAX, 0);
         recv(sockfd, recv_info, MAX, 0);
-        puts(recv_info);
+        char *e;
+        char *r = strdup(recv_info);
+        strcpy(key, strsep(&r, "|"));
+        if (strcmp(key, "ENG") == 0)
+        {
+            while ((e = strsep(&r, "|")) != NULL)
+            {
+                gtk_list_store_append(list, &Iter);
+                gtk_list_store_set(list, &Iter, 0, e, -1);
+            }
+        }
     }
-
 }
 
 void set_mean_textview_text(GtkWidget *textview, char *text)

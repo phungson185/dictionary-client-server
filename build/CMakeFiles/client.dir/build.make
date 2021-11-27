@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/dung/dictionary-client-server
+CMAKE_SOURCE_DIR = /home/sonphung/dictionary-client-server
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/dung/dictionary-client-server/build
+CMAKE_BINARY_DIR = /home/sonphung/dictionary-client-server/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/client.dir/depend.make
@@ -59,29 +59,29 @@ include CMakeFiles/client.dir/flags.make
 
 CMakeFiles/client.dir/src/client.c.o: CMakeFiles/client.dir/flags.make
 CMakeFiles/client.dir/src/client.c.o: ../src/client.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dung/dictionary-client-server/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/client.dir/src/client.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/client.dir/src/client.c.o   -c /home/dung/dictionary-client-server/src/client.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/sonphung/dictionary-client-server/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/client.dir/src/client.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/client.dir/src/client.c.o   -c /home/sonphung/dictionary-client-server/src/client.c
 
 CMakeFiles/client.dir/src/client.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/client.dir/src/client.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/dung/dictionary-client-server/src/client.c > CMakeFiles/client.dir/src/client.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/sonphung/dictionary-client-server/src/client.c > CMakeFiles/client.dir/src/client.c.i
 
 CMakeFiles/client.dir/src/client.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/client.dir/src/client.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/dung/dictionary-client-server/src/client.c -o CMakeFiles/client.dir/src/client.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/sonphung/dictionary-client-server/src/client.c -o CMakeFiles/client.dir/src/client.c.s
 
 CMakeFiles/client.dir/src/dict.c.o: CMakeFiles/client.dir/flags.make
 CMakeFiles/client.dir/src/dict.c.o: ../src/dict.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dung/dictionary-client-server/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/client.dir/src/dict.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/client.dir/src/dict.c.o   -c /home/dung/dictionary-client-server/src/dict.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/sonphung/dictionary-client-server/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/client.dir/src/dict.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/client.dir/src/dict.c.o   -c /home/sonphung/dictionary-client-server/src/dict.c
 
 CMakeFiles/client.dir/src/dict.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/client.dir/src/dict.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/dung/dictionary-client-server/src/dict.c > CMakeFiles/client.dir/src/dict.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/sonphung/dictionary-client-server/src/dict.c > CMakeFiles/client.dir/src/dict.c.i
 
 CMakeFiles/client.dir/src/dict.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/client.dir/src/dict.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/dung/dictionary-client-server/src/dict.c -o CMakeFiles/client.dir/src/dict.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/sonphung/dictionary-client-server/src/dict.c -o CMakeFiles/client.dir/src/dict.c.s
 
 # Object files for target client
 client_OBJECTS = \
@@ -95,7 +95,7 @@ client: CMakeFiles/client.dir/src/client.c.o
 client: CMakeFiles/client.dir/src/dict.c.o
 client: CMakeFiles/client.dir/build.make
 client: CMakeFiles/client.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dung/dictionary-client-server/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C executable client"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/sonphung/dictionary-client-server/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C executable client"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/client.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -108,6 +108,6 @@ CMakeFiles/client.dir/clean:
 .PHONY : CMakeFiles/client.dir/clean
 
 CMakeFiles/client.dir/depend:
-	cd /home/dung/dictionary-client-server/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/dung/dictionary-client-server /home/dung/dictionary-client-server /home/dung/dictionary-client-server/build /home/dung/dictionary-client-server/build /home/dung/dictionary-client-server/build/CMakeFiles/client.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/sonphung/dictionary-client-server/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/sonphung/dictionary-client-server /home/sonphung/dictionary-client-server /home/sonphung/dictionary-client-server/build /home/sonphung/dictionary-client-server/build /home/sonphung/dictionary-client-server/build/CMakeFiles/client.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/client.dir/depend
 

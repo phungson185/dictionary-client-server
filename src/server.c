@@ -164,6 +164,7 @@ void suggestion()
     strcpy(suggest_protocol_str,"ENG");
     suggest_query(user_dict);
     suggest_query(dict);
+    puts(suggest_protocol_str);
     send(connfd, suggest_protocol_str, MAX, 0);
     btcls(dict);
     btcls(user_dict);

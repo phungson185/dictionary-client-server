@@ -119,41 +119,59 @@ void login()
     btcls(user);
 }
 
+void scan_dict(BTA *b)
+{
+    int rsize, k = 0, count = 0;
+
+    char *eng = (char *)malloc(sizeof(char) * MAX);
+    char *vie = (char *)malloc(sizeof(char) * MAX);
+    while (!btseln(b, eng, vie, MAX, &rsize))
+    {
+        if (eng[0] != info1[0])
+            break;
+        for (int i = 0; i < strlen(info1); i++)
+        {
+            if (eng[i] != info1[i])
+            {
+                k = 1;
+                break;
+            }
+        }
+        if (k == 0)
+        {
+            count++;
+            strcat(suggest_protocol_str, "|");
+            strcat(suggest_protocol_str, eng);
+        }
+        k = 0;
+        if (count > 20)
+            break;
+    }
+    free(eng);
+    free(vie);
+}
+
 void suggest_query(BTA *b)
 {
     char kd[2];
-    int rsize, k = 0, count = 0;
-    char *eng = (char *)malloc(sizeof(char) * MAX);
+    int rsize;
     char *vie = (char *)malloc(sizeof(char) * MAX);
-    kd[0] = info1[0];
-    kd[1] = '\0';
 
-    if (!btsel(b, kd, vie, sizeof(char *), &rsize))
+    if (b == dict)
     {
-        while (!btseln(b, eng, vie, MAX, &rsize))
+        kd[0] = info1[0];
+        kd[1] = '\0';
+
+        if (!btsel(b, kd, vie, sizeof(char *), &rsize))
         {
-            if (eng[0] != info1[0])
-                break;
-            for (int i = 0; i < strlen(info1); i++)
-            {
-                if (eng[i] != info1[i])
-                {
-                    k = 1;
-                    break;
-                }
-            }
-            if (k == 0)
-            {
-                count++;
-                strcat(suggest_protocol_str,"|");
-                strcat(suggest_protocol_str,eng);
-            }
-            k = 0;
-            if (count > 20)
-                break;
+            scan_dict(b);
         }
     }
-    free(eng);
+    else
+    {
+        btpos(b, ZSTART);
+        scan_dict(b);
+    }
     free(vie);
 }
 
@@ -161,7 +179,7 @@ void suggestion()
 {
     dict = btopn("../db/dict.bt", 0, 0);
     user_dict = btopn(make_dict_path(username), 0, 0);
-    strcpy(suggest_protocol_str,"ENG");
+    strcpy(suggest_protocol_str, "ENG");
     suggest_query(user_dict);
     suggest_query(dict);
     puts(suggest_protocol_str);
@@ -170,21 +188,114 @@ void suggestion()
     btcls(user_dict);
 }
 
-void translate(){
+void translate()
+{
+    char *value = (char *)malloc(sizeof(char) * MAX);
     dict = btopn("../db/dict.bt", 0, 0);
     user_dict = btopn(make_dict_path(username), 0, 0);
-    char *value = (char *)malloc(sizeof(char) * MAX);
     btpos(dict, ZSTART);
     btpos(user_dict, ZSTART);
     int rsize;
-    if (btsel(user_dict, info1, value, MAX, &rsize)){
+    if (btsel(user_dict, info1, value, MAX, &rsize))
+    {
         if (btsel(dict, info1, value, MAX, &rsize))
-                make_protocol("NOKE", "Không tìm thấy từ");
+            make_protocol("NOKE", "Không tìm thấy từ");
         else
         {
             make_protocol("VIE", value);
         }
     }
+    else
+    {
+        make_protocol("VIE", value);
+    }
+    free(value);
+    btcls(dict);
+    btcls(user_dict);
+}
+
+void add_dict()
+{
+    char *value = (char *)malloc(sizeof(char) * MAX);
+    int rsize;
+    dict = btopn("../db/dict.bt", 0, 0);
+    user_dict = btopn(make_dict_path(username), 0, 0);
+    btpos(dict, ZSTART);
+    btpos(user_dict, ZSTART);
+    if (!btsel(user_dict, info1, value, MAX, &rsize) || !btsel(dict, info1, value, MAX, &rsize))
+    {
+        make_protocol("NOKE", "Từ đã tồn tại trong từ điển");
+    }
+    else
+    {
+        if (!btins(user_dict, info1, info2, MAX))
+            make_protocol("OKE", NULL);
+        else
+            make_protocol("NOKE", "Thêm từ thất bại");
+    }
+    free(value);
+    btcls(dict);
+    btcls(user_dict);
+}
+
+void edit_dict()
+{
+    char *value = (char *)malloc(sizeof(char) * MAX);
+    int rsize;
+    dict = btopn("../db/dict.bt", 0, 0);
+    user_dict = btopn(make_dict_path(username), 0, 0);
+    btpos(dict, ZSTART);
+    btpos(user_dict, ZSTART);
+    if (!btsel(dict, info1, value, MAX, &rsize))
+    {
+        make_protocol("NOKE", "Bạn chỉ có thể sửa những từ trong từ điển cá nhân");
+    }
+    else if (!btsel(user_dict, info1, value, MAX, &rsize))
+    {
+        if (strcmp(value, info2) == 0)
+            make_protocol("NOKE", "Nghĩa bạn chỉnh sửa giống nghĩa ban đầu");
+        else
+        {
+            if (!btupd(user_dict, info1, info2, MAX))
+                make_protocol("OKE", NULL);
+            else
+                make_protocol("NOKE", "Sửa từ thất bại");
+        }
+    }
+    else
+    {
+        make_protocol("NOKE", "Từ bạn muốn chỉnh sửa không có trong từ điển");
+    }
+
+    free(value);
+    btcls(dict);
+    btcls(user_dict);
+}
+
+void del_dict()
+{
+    char *value = (char *)malloc(sizeof(char) * MAX);
+    int rsize;
+    dict = btopn("../db/dict.bt", 0, 0);
+    user_dict = btopn(make_dict_path(username), 0, 0);
+    btpos(dict, ZSTART);
+    btpos(user_dict, ZSTART);
+    if (!btsel(dict, info1, value, MAX, &rsize))
+    {
+        make_protocol("NOKE", "Bạn chỉ có thể xóa những từ trong từ điển cá nhân");
+    }
+    else if (!btsel(user_dict, info1, value, MAX, &rsize))
+    {
+        if (!btdel(user_dict, info1))
+            make_protocol("OKE", NULL);
+        else
+            make_protocol("NOKE", "Xóa từ thất bại");
+    }
+    else
+    {
+        make_protocol("NOKE", "Từ bạn muốn xóa không có trong từ điển");
+    }
+
     free(value);
     btcls(dict);
     btcls(user_dict);
@@ -246,8 +357,14 @@ int main(int argc, char **argv)
                     login();
                 else if (strcmp("SUG", key) == 0)
                     suggestion();
-                else if (strcmp("ENG", key) ==0)
+                else if (strcmp("ENG", key) == 0)
                     translate();
+                else if (strcmp("ADICT", key) == 0)
+                    add_dict();
+                else if (strcmp("EDIT", key) == 0)
+                    edit_dict();
+                else if (strcmp("DDICT", key) == 0)
+                    del_dict();
             }
 
             if (n < 0)

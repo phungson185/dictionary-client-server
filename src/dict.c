@@ -232,7 +232,7 @@ void translate()
     }
     else
     {
-        make_protocol("ENG",gettext, NULL);
+        make_protocol("ENG", gettext, NULL);
         if (strcmp(key, "NOKE") == 0)
             set_mean_textview_text(textview1, info1);
         else if (strcmp(key, "VIE") == 0)
@@ -246,92 +246,76 @@ void clear_history()
     set_mean_textview_text(textview_his, htr);
 }
 
+void extend()
+{
+    GtkBuilder *builder;
+
+    builder = gtk_builder_new_from_file("../ui/dict-app.glade");
+
+    window_advanced = GTK_WIDGET(gtk_builder_get_object(builder, "window_advanced"));
+    gtk_builder_connect_signals(builder, NULL);
+
+    entry_newword = GTK_WIDGET(gtk_builder_get_object(builder, "entry_newword"));
+    entry_meanword = GTK_WIDGET(gtk_builder_get_object(builder, "entry_meanword"));
+    entry_del = GTK_WIDGET(gtk_builder_get_object(builder, "entry_del"));
+    textview2 = GTK_WIDGET(gtk_builder_get_object(builder, "textview2"));
+
+    g_object_unref(builder);
+    gtk_widget_show(window_advanced);
+}
+
 void add_to_dict()
 {
-    char *value = (char *)malloc(sizeof(char) * MAX);
-    int rsize;
     gchar new_word[MAX];
     gchar mean_word[MAX];
-    btpos(dict, ZSTART);
     strcpy(new_word, gtk_entry_get_text(GTK_ENTRY(entry_newword)));
     strcpy(mean_word, gtk_entry_get_text(GTK_ENTRY(entry_meanword)));
-    if (strcmp(new_word, "") == 0 && strcmp(mean_word, "") == 0)
+    if (strcmp(new_word, "") == 0 || strcmp(mean_word, "") == 0)
     {
-        gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập từ mới và nghĩa cần thêm");
+        gtk_label_set_text(GTK_LABEL(textview2), "Thông tin thêm từ còn thiếu");
     }
     else
     {
-        if (strcmp(new_word, "") == 0)
+        make_protocol("ADICT", new_word, mean_word);
+        if (strcmp(key, "NOKE") == 0)
         {
-            gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập từ mới cần thêm");
+            gtk_label_set_text(GTK_LABEL(textview2), info1);
         }
-        else if (strcmp(mean_word, "") == 0)
+        else if (strcmp(key, "OKE") == 0)
         {
-            gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập nghĩa của từ cần thêm");
-        }
-        else
-        {
-            if (!btsel(dict, new_word, value, MAX, &rsize))
-            {
-                gtk_label_set_text(GTK_LABEL(textview2), "Từ này đã có trong từ điển");
-            }
-            else
-            {
-                if (!btins(dict, new_word, mean_word, MAX))
-                    gtk_label_set_text(GTK_LABEL(textview2), "Đã thêm thành công");
-                else
-                    gtk_label_set_text(GTK_LABEL(textview2), "Thêm thất bại, chương trình lỗi...");
-            }
+            gtk_label_set_text(GTK_LABEL(textview2), "Thêm từ thành công");
         }
     }
-    free(value);
 }
 
 void repair_word()
 {
     gchar new_word[MAX];
     gchar mean_word[MAX];
-    char *value = (char *)malloc(sizeof(char) * MAX);
-    int rsize;
-    btpos(dict, ZSTART);
     strcpy(new_word, gtk_entry_get_text(GTK_ENTRY(entry_newword)));
     strcpy(mean_word, gtk_entry_get_text(GTK_ENTRY(entry_meanword)));
-    if (strcmp(new_word, "") == 0 && strcmp(mean_word, "") == 0)
+    if (strcmp(new_word, "") == 0 || strcmp(mean_word, "") == 0)
     {
-        gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập từ và nghĩa cần sửa");
+        gtk_label_set_text(GTK_LABEL(textview2), "Thông tin sửa từ còn thiếu");
     }
     else
     {
-        if (strcmp(new_word, "") == 0)
+        make_protocol("EDIT", new_word, mean_word);
+        if (strcmp(key, "NOKE") == 0)
         {
-            gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập từ cần sửa");
+            gtk_label_set_text(GTK_LABEL(textview2), info1);
         }
-        else if (strcmp(mean_word, "") == 0)
+        else if (strcmp(key, "OKE") == 0)
         {
-            gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập nghĩa cần thay thế");
+            gtk_label_set_text(GTK_LABEL(textview2), "Sửa từ thành công");
         }
-        else if (!btsel(dict, new_word, value, MAX, &rsize))
-            if (strcmp(value, mean_word) == 0)
-                gtk_label_set_text(GTK_LABEL(textview2), "Nghĩa bạn thay thế giống nghĩa của từ điển");
-            else
-            {
-                if (!btupd(dict, new_word, mean_word, MAX))
-                    gtk_label_set_text(GTK_LABEL(textview2), "Đã sửa thành công");
-                else
-                    gtk_label_set_text(GTK_LABEL(textview2), "Sửa thất bại, chương trình lỗi...");
-            }
-        else
-            gtk_label_set_text(GTK_LABEL(textview2), "Từ bạn cần sửa không có trong từ điển, vui lòng dùng chức năng thêm");
     }
-    free(value);
 }
+
 
 void delete_from_dict()
 {
-    char *value = (char *)malloc(sizeof(char) * MAX);
-    int rsize;
     gchar gettext[MAX];
-    btpos(dict, ZSTART);
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(entry_del)));
     if (strcmp(gettext, "") == 0)
     {
@@ -339,17 +323,16 @@ void delete_from_dict()
     }
     else
     {
-        if (btsel(dict, gettext, value, MAX, &rsize))
-            gtk_label_set_text(GTK_LABEL(textview2), "Không tìm thấy từ bạn cần xóa");
-        else
+        make_protocol("DDICT", gettext, NULL);
+        if (strcmp(key, "NOKE") == 0)
         {
-            if (!btdel(dict, gettext))
-                gtk_label_set_text(GTK_LABEL(textview2), "Đã xóa thành công");
-            else
-                gtk_label_set_text(GTK_LABEL(textview2), "Xóa thất bại, chương trình lỗi...");
+            gtk_label_set_text(GTK_LABEL(textview2), info1);
+        }
+        else if (strcmp(key, "OKE") == 0)
+        {
+            gtk_label_set_text(GTK_LABEL(textview2), "Xóa từ thành công");
         }
     }
-    free(value);
 }
 
 void add_to_note()
@@ -416,24 +399,6 @@ void delete_from_note()
     }
     free(value);
     btcls(note);
-}
-
-void extend()
-{
-    GtkBuilder *builder;
-
-    builder = gtk_builder_new_from_file("../src/dict-app.glade");
-
-    window_advanced = GTK_WIDGET(gtk_builder_get_object(builder, "window_advanced"));
-    gtk_builder_connect_signals(builder, NULL);
-
-    entry_newword = GTK_WIDGET(gtk_builder_get_object(builder, "entry_newword"));
-    entry_meanword = GTK_WIDGET(gtk_builder_get_object(builder, "entry_meanword"));
-    entry_del = GTK_WIDGET(gtk_builder_get_object(builder, "entry_del"));
-    textview2 = GTK_WIDGET(gtk_builder_get_object(builder, "textview2"));
-
-    g_object_unref(builder);
-    gtk_widget_show(window_advanced);
 }
 
 void practice()

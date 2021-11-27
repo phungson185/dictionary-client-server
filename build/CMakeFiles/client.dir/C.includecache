@@ -26,6 +26,22 @@ jval.h
 
 ../lib/jval.h
 
+/home/sonphung/dictionary-client-server/src/client.c
+stdlib.h
+-
+stdio.h
+-
+sys/types.h
+-
+sys/socket.h
+-
+netinet/in.h
+-
+string.h
+-
+dict.h
+/home/sonphung/dictionary-client-server/src/dict.h
+
 /home/sonphung/dictionary-client-server/src/dict.c
 dict.h
 /home/sonphung/dictionary-client-server/src/dict.h

@@ -16,14 +16,7 @@ int main_handler(int argc, char **argv)
     log_pass = GTK_WIDGET(gtk_builder_get_object(builder, "log_pass"));
     log_noti = GTK_WIDGET(gtk_builder_get_object(builder, "log_noti"));
 
-    // g_signal_connect(reg_acc, "key_press_event", G_CALLBACK(set_label_empty_text(reg_noti)), NULL);
-    // g_signal_connect(reg_pass, "key_press_event", G_CALLBACK(set_label_empty_text(reg_noti)), NULL);
-    // g_signal_connect(retype_pass, "key_press_event", G_CALLBACK(set_label_empty_text(reg_noti)), NULL);
-
     g_signal_connect(window_login, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-
-    // datainit();
-    // dict = btopn("dict.bt", 0, 0);
 
     g_object_unref(builder);
     gtk_widget_show(window_login);
@@ -185,7 +178,7 @@ void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
     }
     if (strcmp(gettext, "") == 0)
     {
-        set_mean_textview_text(textview1, "");
+        set_mean_textview_text(ERROR, textview1, "");
     }
     else
     {
@@ -208,7 +201,7 @@ void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
     }
 }
 
-void set_mean_textview_text(GtkWidget *textview, char *text)
+void set_mean_textview_text(RES res, GtkWidget *textview, char *text)
 {
     GtkTextBuffer *buffer;
     buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview));
@@ -219,6 +212,10 @@ void set_mean_textview_text(GtkWidget *textview, char *text)
     }
     gtk_text_buffer_set_text(buffer, text, -1);
     gtk_text_view_set_buffer(GTK_TEXT_VIEW(textview), buffer);
+    if (res == ERROR)
+        gtk_widget_modify_fg(GTK_TEXT_VIEW(textview), GTK_STATE_NORMAL, &red);
+    else if (res == SUCCESS)
+        gtk_widget_modify_fg(GTK_TEXT_VIEW(textview), GTK_STATE_NORMAL, &green);
 }
 
 void translate()
@@ -228,22 +225,22 @@ void translate()
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
     if (strcmp(gettext, "") == 0)
     {
-        set_mean_textview_text(textview1, "");
+        set_mean_textview_text(ERROR,textview1, "");
     }
     else
     {
         make_protocol("ENG", gettext, NULL);
         if (strcmp(key, "NOKE") == 0)
-            set_mean_textview_text(textview1, info1);
+            set_mean_textview_text(ERROR, textview1, info1);
         else if (strcmp(key, "VIE") == 0)
-            set_mean_textview_text(textview1, info1);
+            set_mean_textview_text(SUCCESS, textview1, info1);
     }
 }
 
 void clear_history()
 {
     strcpy(htr, "");
-    set_mean_textview_text(textview_his, htr);
+    set_mean_textview_text(ERROR, textview_his, htr);
 }
 
 void extend()
@@ -312,7 +309,6 @@ void repair_word()
     }
 }
 
-
 void delete_from_dict()
 {
     gchar gettext[MAX];
@@ -347,24 +343,24 @@ void add_to_note()
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
     if (strcmp(gettext, "") == 0)
     {
-        set_mean_textview_text(textview1, "Bạn chưa nhập vào từ cần thêm vào danh sách ghi chú");
+        set_mean_textview_text(ERROR,textview1, "Bạn chưa nhập vào từ cần thêm vào danh sách ghi chú");
     }
     else
     {
         if (!btsel(note, gettext, value, MAX, &rsize))
         {
-            set_mean_textview_text(textview1, "Từ này đã có trong danh sách ghi chú");
+            set_mean_textview_text(ERROR, textview1, "Từ này đã có trong danh sách ghi chú");
         }
         else if (btsel(dict, gettext, value, MAX, &rsize))
-            set_mean_textview_text(textview1, "Từ bạn nhập không có trong từ điển, không thể thêm...");
+            set_mean_textview_text(ERROR, textview1, "Từ bạn nhập không có trong từ điển, không thể thêm...");
         else
         {
             if (!btins(note, gettext, value, MAX))
             {
-                set_mean_textview_text(textview1, "Đã thêm thành công");
+                set_mean_textview_text(SUCCESS, textview1, "Đã thêm thành công");
             }
             else
-                set_mean_textview_text(textview1, "Không thể thêm, chương trình lỗi...");
+                set_mean_textview_text(ERROR, textview1, "Không thể thêm, chương trình lỗi...");
         }
     }
     free(value);
@@ -381,20 +377,20 @@ void delete_from_note()
 
     if (strcmp(gettext, "") == 0)
     {
-        set_mean_textview_text(textview1, "Bạn chưa nhập vào từ cần xóa khỏi danh sách ghi chú");
+        set_mean_textview_text(ERROR, textview1, "Bạn chưa nhập vào từ cần xóa khỏi danh sách ghi chú");
     }
     else
     {
         if (btsel(note, gettext, value, MAX, &rsize))
-            set_mean_textview_text(textview1, "Từ bạn nhập không có trong danh sách ghi chú");
+            set_mean_textview_text(ERROR, textview1, "Từ bạn nhập không có trong danh sách ghi chú");
         else
         {
             if (!btdel(note, gettext))
             {
-                set_mean_textview_text(textview1, "Đã xóa thành công");
+                set_mean_textview_text(SUCCESS, textview1, "Đã xóa thành công");
             }
             else
-                set_mean_textview_text(textview1, "Không thể xóa, chương trình lỗi...");
+                set_mean_textview_text(ERROR, textview1, "Không thể xóa, chương trình lỗi...");
         }
     }
     free(value);
@@ -428,7 +424,7 @@ void practice()
     }
     char *list = (char *)malloc(sizeof(char) * MAX * SIZE_OF_NOTE);
     if (SIZE_OF_NOTE == 0)
-        set_mean_textview_text(textview3, "Danh sách trống");
+        set_mean_textview_text(ERROR, textview3, "Danh sách trống");
     else
     {
         btpos(note, ZSTART);
@@ -446,7 +442,7 @@ void practice()
             }
             flag = 1;
         }
-        set_mean_textview_text(textview3, list);
+        set_mean_textview_text(SUCCESS,textview3, list);
     }
     free(list);
     btcls(note);
@@ -455,7 +451,7 @@ void practice()
 void delete_all_note()
 {
     note = btcrt("note.bt", 0, 0);
-    set_mean_textview_text(textview3, "Danh sách trống");
+    set_mean_textview_text(ERROR,textview3, "Danh sách trống");
     btcls(note);
 }
 

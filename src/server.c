@@ -82,7 +82,7 @@ void registerr()
     {
         if (!btins(user, info1, info2, MAX))
         {
-            if (btcrt(make_dict_path(info1), 0, 0) == NULL)
+            if ((user_dict = btcrt(make_dict_path(info1), 0, 0)) == NULL)
             {
                 perror("Lỗi không thể tạo file từ điển cá nhân");
                 return -1;
@@ -93,6 +93,7 @@ void registerr()
             make_protocol("NOKE", "Đăng ký thất bại, chương trình lỗi...");
     }
     btcls(user);
+    btcls(user_dict);
 }
 
 void login()
@@ -301,6 +302,15 @@ void del_dict()
     btcls(user_dict);
 }
 
+void add_note(){
+    char *value = (char *)malloc(sizeof(char) * MAX);
+    int rsize;
+    dict = btopn("../db/dict.bt", 0, 0);
+    user_dict = btopn(make_dict_path(username), 0, 0);
+
+    
+}
+
 int main(int argc, char **argv)
 {
     int listenfd, n;
@@ -365,6 +375,8 @@ int main(int argc, char **argv)
                     edit_dict();
                 else if (strcmp("DDICT", key) == 0)
                     del_dict();
+                    else if (strcmp("ANOTE", key) == 0)
+                    add_note();
             }
 
             if (n < 0)

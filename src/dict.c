@@ -65,6 +65,8 @@ void make_protocol(char *k, char *i1, char *i2)
         strcat(pr, i2);
     }
     send(sockfd, pr, MAX, 0);
+
+
     recv(sockfd, recv_info, MAX, 0);
     char *str = strdup(recv_info);
     strcpy(key, strsep(&str, "|"));
@@ -347,6 +349,7 @@ void add_to_note()
     }
     else
     {
+        make_protocol("ANOTE", gettext, NULL);
         if (!btsel(note, gettext, value, MAX, &rsize))
         {
             set_mean_textview_text(ERROR, textview1, "Từ này đã có trong danh sách ghi chú");

@@ -39,8 +39,8 @@ BTA *note;
 char htr[MAX];
 char buftrans[MAX];
 int sockfd;
-char key[MAX];
-char info1[MAX];
+char key[MAX]; 
+char info1[MAX]; 
 char info2[MAX];
 char recv_info[MAX];
 

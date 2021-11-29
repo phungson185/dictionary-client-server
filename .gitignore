@@ -1,3 +1,7 @@
 .vscode
 
+build/*
+
 db/dict.bt
+db/userDict/*
+db/user.bt

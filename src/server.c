@@ -200,7 +200,7 @@ void translate()
     if (btsel(user_dict, info1, value, MAX, &rsize))
     {
         if (btsel(dict, info1, value, MAX, &rsize))
-            make_protocol("NOKE", "Không tìm thấy từ");
+            make_protocol("NOKE", "Không tìm thấy nghĩa của từ");
         else
         {
             make_protocol("VIE", value);

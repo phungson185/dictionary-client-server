@@ -17,12 +17,6 @@
 #define SERV_PORT 3000 /*port*/
 #define MAX 1000
 
-typedef enum
-{
-    ERROR,
-    SUCCESS
-} RES;
-
 GtkBuilder *builder;
 GtkWidget *window_login, *window_register, *window_main, *window_advanced, *window_note, *window_about;
 GtkEntryCompletion *comple;
@@ -49,7 +43,7 @@ GdkColor green;
 
 void datainit();
 void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data);
-void set_mean_textview_text(RES res, GtkWidget *textview, char *text);
+void set_mean_textview_text(GtkWidget *textview, char *text);
 void set_label_empty_text(GtkWidget *widget);
 void translate();
 void delay(int number_of_seconds);

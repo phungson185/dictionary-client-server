@@ -62,6 +62,23 @@ void make_protocol(char *k, char *mesg)
     send(connfd, pr, MAX, 0);
 }
 
+void make_protocol_two_msgs(char* k, char* mesg1, char* mesg2)
+{
+    char *pr = (char *)malloc(sizeof(char) * MAX);
+    strcpy(pr, k);
+    if (mesg1 != NULL)
+    {
+        strcat(pr, "|");
+        strcat(pr, mesg1);
+    }
+    if (mesg2 != NULL)
+    {
+        strcat(pr, "|");
+        strcat(pr, mesg2);
+    }
+    send(connfd, pr, MAX, 0);
+}
+
 char *make_dict_path(char *username)
 {
     char *path = (char *)malloc(sizeof(char) * MAX);
@@ -104,9 +121,7 @@ void login()
     btpos(user, ZSTART);
 
     if (btsel(user, info1, pass, MAX, &rsize))
-    {
         make_protocol("NOKE", "Tài khoản không tồn tại");
-    }
     else
     {
         if (strcmp(pass, info2) != 0)
@@ -183,7 +198,6 @@ void suggestion()
     strcpy(suggest_protocol_str, "ENG");
     suggest_query(user_dict);
     suggest_query(dict);
-    puts(suggest_protocol_str);
     send(connfd, suggest_protocol_str, MAX, 0);
     btcls(dict);
     btcls(user_dict);
@@ -192,25 +206,27 @@ void suggestion()
 void translate()
 {
     char *value = (char *)malloc(sizeof(char) * MAX);
+    char *edited_mean = (char *)malloc(sizeof(char) * MAX);
+    char *origin_mean = (char *)malloc(sizeof(char) * MAX);
     dict = btopn("../db/dict.bt", 0, 0);
     user_dict = btopn(make_dict_path(username), 0, 0);
     btpos(dict, ZSTART);
     btpos(user_dict, ZSTART);
     int rsize;
-    if (btsel(user_dict, info1, value, MAX, &rsize))
-    {
-        if (btsel(dict, info1, value, MAX, &rsize))
-            make_protocol("NOKE", "Không tìm thấy nghĩa của từ");
-        else
-        {
-            make_protocol("VIE", value);
-        }
-    }
+    strcpy(edited_mean, "");
+    strcpy(origin_mean, "");
+
+    if (!btsel(user_dict, info1, value, MAX, &rsize))
+        strcpy(edited_mean, value);
+    if (!btsel(dict, info1, value, MAX, &rsize))
+        strcpy(origin_mean, value);
+    if (strlen(edited_mean) == 0 && strlen(origin_mean) == 0)
+        make_protocol("NOKE", "Không tìm thấy từ");
     else
-    {
-        make_protocol("VIE", value);
-    }
+        make_protocol_two_msgs("VIE", edited_mean, origin_mean);
     free(value);
+    free(edited_mean);
+    free(origin_mean);
     btcls(dict);
     btcls(user_dict);
 }
@@ -224,9 +240,7 @@ void add_dict()
     btpos(dict, ZSTART);
     btpos(user_dict, ZSTART);
     if (!btsel(user_dict, info1, value, MAX, &rsize) || !btsel(dict, info1, value, MAX, &rsize))
-    {
         make_protocol("NOKE", "Từ đã tồn tại trong từ điển");
-    }
     else
     {
         if (!btins(user_dict, info1, info2, MAX))
@@ -247,27 +261,25 @@ void edit_dict()
     user_dict = btopn(make_dict_path(username), 0, 0);
     btpos(dict, ZSTART);
     btpos(user_dict, ZSTART);
-    if (!btsel(dict, info1, value, MAX, &rsize))
+    if (!btsel(user_dict, info1, value, MAX, &rsize))
     {
-        make_protocol("NOKE", "Bạn chỉ có thể sửa những từ trong từ điển cá nhân");
-    }
-    else if (!btsel(user_dict, info1, value, MAX, &rsize))
-    {
-        if (strcmp(value, info2) == 0)
-            make_protocol("NOKE", "Nghĩa bạn chỉnh sửa giống nghĩa ban đầu");
+        if (!btupd(user_dict, info1, info2, MAX))
+            make_protocol("OKE", NULL);
         else
+            make_protocol("NOKE", "Sửa từ thất bại");
+    }
+    else
+    {
+        if (!btsel(dict, info1, value, MAX, &rsize))
         {
-            if (!btupd(user_dict, info1, info2, MAX))
+            if (!btins(user_dict, info1, info2, MAX))
                 make_protocol("OKE", NULL);
             else
                 make_protocol("NOKE", "Sửa từ thất bại");
         }
+        else
+            make_protocol("NOKE", "Từ bạn muốn chỉnh sửa không có trong từ điển");
     }
-    else
-    {
-        make_protocol("NOKE", "Từ bạn muốn chỉnh sửa không có trong từ điển");
-    }
-
     free(value);
     btcls(dict);
     btcls(user_dict);
@@ -282,9 +294,7 @@ void del_dict()
     btpos(dict, ZSTART);
     btpos(user_dict, ZSTART);
     if (!btsel(dict, info1, value, MAX, &rsize))
-    {
         make_protocol("NOKE", "Bạn chỉ có thể xóa những từ trong từ điển cá nhân");
-    }
     else if (!btsel(user_dict, info1, value, MAX, &rsize))
     {
         if (!btdel(user_dict, info1))
@@ -293,22 +303,19 @@ void del_dict()
             make_protocol("NOKE", "Xóa từ thất bại");
     }
     else
-    {
         make_protocol("NOKE", "Từ bạn muốn xóa không có trong từ điển");
-    }
 
     free(value);
     btcls(dict);
     btcls(user_dict);
 }
 
-void add_note(){
+void add_note()
+{
     char *value = (char *)malloc(sizeof(char) * MAX);
     int rsize;
     dict = btopn("../db/dict.bt", 0, 0);
     user_dict = btopn(make_dict_path(username), 0, 0);
-
-    
 }
 
 int main(int argc, char **argv)
@@ -375,7 +382,7 @@ int main(int argc, char **argv)
                     edit_dict();
                 else if (strcmp("DDICT", key) == 0)
                     del_dict();
-                    else if (strcmp("ANOTE", key) == 0)
+                else if (strcmp("ANOTE", key) == 0)
                     add_note();
             }
 

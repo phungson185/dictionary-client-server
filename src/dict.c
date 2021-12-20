@@ -65,11 +65,15 @@ void make_protocol(char *k, char *i1, char *i2)
     send(sockfd, pr, MAX, 0);
 
     recv(sockfd, recv_info, MAX, 0);
+    printf("String received from server: ");
+    puts(recv_info);
     char *str = strdup(recv_info);
     strcpy(key, strsep(&str, "|"));
     char *noti_;
     if ((noti_ = strsep(&str, "|")) != NULL)
         strcpy(info1, noti_);
+    if ((noti_ = strsep(&str, "|")) != NULL)
+        strcpy(info2, noti_);
     free(pr);
 }
 
@@ -200,11 +204,12 @@ void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
         {
             while ((e = strsep(&r, "|")) != NULL)
             {
-                gtk_list_store_append(list, &Iter);
-                gtk_list_store_set(list, &Iter, 0, e, -1);
+                gtk_list_store_append(list, &suggestion_iter);
+                gtk_list_store_set(list, &suggestion_iter, 0, e, -1);
             }
         }
     }
+    free(pr);
 }
 
 void set_mean_textview_text(GtkWidget *textview, char *text)
@@ -218,16 +223,13 @@ void set_mean_textview_text(GtkWidget *textview, char *text)
     }
     gtk_text_buffer_set_text(buffer, text, -1);
     gtk_text_view_set_buffer(GTK_TEXT_VIEW(textview), buffer);
-    // if (res == ERROR)
-    //     gtk_widget_modify_fg(GTK_TEXT_VIEW(textview), GTK_STATE_NORMAL, &red);
-    // else if (res == SUCCESS)
-    //     gtk_widget_modify_fg(GTK_TEXT_VIEW(textview), GTK_STATE_NORMAL, &green);
 }
 
 void translate()
 {
     int rsize;
     gchar gettext[MAX];
+
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
     if (strcmp(gettext, "") == 0)
         set_mean_textview_text(textview1, "");
@@ -240,7 +242,27 @@ void translate()
             set_mean_textview_text(textview1, "");
         }
         else if (strcmp(key, "VIE") == 0)
-            set_mean_textview_text(textview1, info1);
+        {
+            GtkTextBuffer *buffer;
+            GtkTextIter translation_iter, start, end;
+            buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview1));
+            gtk_text_buffer_get_start_iter(buffer, &start);
+            gtk_text_buffer_get_end_iter(buffer, &end);
+            gtk_text_buffer_delete(buffer, &start, &end);
+            gtk_text_buffer_create_tag(buffer, "blue_fg", "foreground", "blue", NULL);
+            gtk_text_buffer_create_tag(buffer, "red_fg", "foreground", "red", NULL);
+            gtk_text_buffer_get_iter_at_offset(buffer, &translation_iter, 0);
+
+            if (strcmp(info1, "") == 0)
+                gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, info2, -1, "blue_fg", NULL);
+            else
+            {
+                gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, strcat("Nghĩa đã sửa: ", info1), -1, "red_fg", NULL);
+                gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, strcat("Nghĩa gốc: ", info2), -1, "blue_fg", NULL);
+                // gtk_text_view_set_buffer(GTK_TEXT_VIEW(textview1), buffer);
+            }
+            // gtk_text_iter_free(&translation_iter);
+        }
     }
 }
 
@@ -266,13 +288,13 @@ void extend()
     gchar gettext[100];
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
 
-    if(strlen(gettext) > 0)
+    if (strlen(gettext) > 0)
     {
         gtk_entry_set_text(GTK_ENTRY(entry_newword), gettext);
         gtk_entry_set_text(GTK_ENTRY(entry_del), gettext);
     }
-    
-    textview2 = GTK_WIDGET(gtk_builder_get_object(builder, "textview2"));
+
+    // textview2 = GTK_WIDGET(gtk_builder_get_object(builder, "textview2"));
 
     g_object_unref(builder);
     gtk_widget_show(window_advanced);

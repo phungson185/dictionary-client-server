@@ -131,6 +131,7 @@ void login()
         make_protocol("LOG", info1, info2);
         if (strcmp(key, "OKE") == 0)
         {
+            strcpy(user, info1);
             show_main_window();
         }
         else if (strcmp(key, "NOKE") == 0)
@@ -222,8 +223,8 @@ void set_mean_textview_text(GtkWidget *textview, char *text)
 void translate()
 {
     int rsize;
-    char* edited_mean = (char *)malloc(sizeof(char) * MAX);
-    char* origin_mean = (char *)malloc(sizeof(char) * MAX);
+    char *edited_mean = (char *)malloc(sizeof(char) * MAX);
+    char *origin_mean = (char *)malloc(sizeof(char) * MAX);
     gchar gettext[MAX];
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
     if (strcmp(gettext, "") == 0)
@@ -249,12 +250,12 @@ void translate()
             gtk_text_buffer_get_iter_at_offset(buffer, &translation_iter, 0);
             if (strcmp(info1, "") == 0)
                 gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, info2, -1, "blue_fg", NULL);
-            else if (strcmp(info2, "") ==0)
+            else if (strcmp(info2, "") == 0)
                 gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, info1, -1, "blue_fg", NULL);
             else
             {
-                sprintf(edited_mean, "Nghĩa đã sửa: %s\n", info1);  
-                sprintf(origin_mean, "Nghĩa gốc: %s", info2);  
+                sprintf(edited_mean, "Nghĩa đã sửa: %s\n", info1);
+                sprintf(origin_mean, "Nghĩa gốc: %s", info2);
                 gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, edited_mean, -1, "red_fg", NULL);
                 gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, origin_mean, -1, "blue_fg", NULL);
             }
@@ -350,125 +351,101 @@ void delete_from_dict()
 
 void add_to_note()
 {
-    note = btopn("note.bt", 0, 0);
-    char gettext[MAX];
-    char *value = (char *)malloc(sizeof(char) * MAX);
-    int rsize;
-    btpos(dict, ZSTART);
-    btpos(note, ZSTART);
-
+    char gettext[100];
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
     if (strcmp(gettext, "") == 0)
-        set_mean_textview_text(textview1, "Bạn chưa nhập vào từ cần thêm vào danh sách ghi chú");
+        show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Bạn chưa nhập vào từ cần thêm vào danh sách ghi chú");
     else
     {
         make_protocol("ANOTE", gettext, NULL);
-        if (!btsel(note, gettext, value, MAX, &rsize))
-        {
-            set_mean_textview_text(textview1, "Từ này đã có trong danh sách ghi chú");
-        }
-        else if (btsel(dict, gettext, value, MAX, &rsize))
-            set_mean_textview_text(textview1, "Từ bạn nhập không có trong từ điển, không thể thêm...");
-        else
-        {
-            if (!btins(note, gettext, value, MAX))
-            {
-                set_mean_textview_text(textview1, "Đã thêm thành công");
-            }
-            else
-                set_mean_textview_text(textview1, "Không thể thêm, chương trình lỗi...");
-        }
+        if (strcmp(key, "NOKE") == 0)
+            show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", info1);
+        else if (strcmp(key, "OKE") == 0)
+            show_message(window_main, GTK_MESSAGE_INFO, "SUCCESS!", "Thêm từ vào danh sách ghi chú thành công");
     }
-    free(value);
-    btcls(note);
 }
 
 void delete_from_note()
 {
-    note = btopn("note.bt", 0, 0);
-    char gettext[MAX];
-    char *value = (char *)malloc(sizeof(char) * MAX);
-    int rsize;
+    char gettext[100];
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
 
     if (strcmp(gettext, "") == 0)
-    {
-        set_mean_textview_text(textview1, "Bạn chưa nhập vào từ cần xóa khỏi danh sách ghi chú");
-    }
+        show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Bạn chưa nhập vào từ cần xóa khỏi danh sách ghi chú");
     else
     {
-        if (btsel(note, gettext, value, MAX, &rsize))
-            set_mean_textview_text(textview1, "Từ bạn nhập không có trong danh sách ghi chú");
-        else
-        {
-            if (!btdel(note, gettext))
-            {
-                set_mean_textview_text(textview1, "Đã xóa thành công");
-            }
-            else
-                set_mean_textview_text(textview1, "Không thể xóa, chương trình lỗi...");
-        }
+        make_protocol("DNOTE", gettext, NULL);
+        if (strcmp(key, "NOKE") == 0)
+            show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", info1);
+        else if (strcmp(key, "OKE") == 0)
+            show_message(window_main, GTK_MESSAGE_INFO, "SUCCESS!", "Xóa từ khỏi danh sách ghi chú thành công");
     }
-    free(value);
-    btcls(note);
 }
 
-void practice()
+void note()
 {
-    note = btopn("note.bt", 0, 0);
-    int SIZE_OF_NOTE = 0;
-    char *eng = (char *)malloc(sizeof(char) * MAX);
-    char *vie = (char *)malloc(sizeof(char) * MAX);
-    int rsize, flag = 0;
-    btpos(note, ZSTART);
-
     GtkBuilder *builder;
 
-    builder = gtk_builder_new_from_file("../src/dict-app.glade");
+    builder = gtk_builder_new_from_file("../ui/dict-app.glade");
 
     window_note = GTK_WIDGET(gtk_builder_get_object(builder, "window_note"));
     gtk_builder_connect_signals(builder, NULL);
 
-    textview3 = GTK_WIDGET(gtk_builder_get_object(builder, "textview3"));
+    textview2 = GTK_WIDGET(gtk_builder_get_object(builder, "textview2"));
 
+    send(sockfd, "GNOTE", MAX, 0);
+    recv(sockfd, recv_info, MAX, 0);
+    puts(recv_info);
+    char *word = (char *)malloc(sizeof(char) * 100);
+    char *e;
+    char *r = strdup(recv_info);
+    strcpy(key, strsep(&r, "|"));
+    GtkTextBuffer *buffer;
+    GtkTextIter note_iter, start_note, end_note;
+    buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview2));
+    gtk_text_buffer_get_start_iter(buffer, &start_note);
+    gtk_text_buffer_get_end_iter(buffer, &end_note);
+    gtk_text_buffer_delete(buffer, &start_note, &end_note);
+    gtk_text_buffer_get_iter_at_offset(buffer, &note_iter, 0);
+    if (strcmp(key, "OKE") == 0)
+    {
+        gtk_text_buffer_create_tag(buffer, "blue_fg", "foreground", "blue", NULL);
+        while ((e = strsep(&r, "|")) != NULL)
+        {
+            sprintf(word, "%s\n", e);
+            gtk_text_buffer_insert_with_tags_by_name(buffer, &note_iter, word, -1, "blue_fg", NULL);
+        }
+    }
+    else if (strcmp(key, "NOKE") == 0)
+    {
+        if ((e = strsep(&r, "|")) != NULL)
+        {
+            gtk_text_buffer_create_tag(buffer, "red_fg", "foreground", "red", NULL);
+            gtk_text_buffer_insert_with_tags_by_name(buffer, &note_iter, e, -1, "red_fg", NULL);
+        }
+    }
     g_object_unref(builder);
     gtk_widget_show(window_note);
-
-    while (!btseln(note, eng, vie, MAX, &rsize))
-    {
-        SIZE_OF_NOTE++;
-    }
-    char *list = (char *)malloc(sizeof(char) * MAX * SIZE_OF_NOTE);
-    if (SIZE_OF_NOTE == 0)
-        set_mean_textview_text(textview3, "Danh sách trống");
-    else
-    {
-        btpos(note, ZSTART);
-        while (!btseln(note, eng, vie, MAX, &rsize))
-        {
-            if (!flag)
-            {
-                strcpy(list, eng);
-                strcat(list, "\n");
-            }
-            else
-            {
-                strcat(list, eng);
-                strcat(list, "\n");
-            }
-            flag = 1;
-        }
-        set_mean_textview_text(textview3, list);
-    }
-    free(list);
-    btcls(note);
 }
 
-void delete_all_note()
+void del_all_note()
 {
-    note = btcrt("note.bt", 0, 0);
-    set_mean_textview_text(textview3, "Danh sách trống");
-    btcls(note);
+    make_protocol("DANOTE", user, NULL);
+    if (strcmp(key, "NOKE") == 0)
+        show_message(window_note, GTK_MESSAGE_ERROR, "ERROR!", info1);
+    else if (strcmp(key, "OKE") == 0)
+    {
+        show_message(window_note, GTK_MESSAGE_INFO, "SUCCESS!", "Xóa tất cả từ khỏi danh sách ghi chú thành công");
+        GtkTextBuffer *buffer;
+        GtkTextIter note_iter, start_note, end_note;
+        buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview2));
+        gtk_text_buffer_get_start_iter(buffer, &start_note);
+        gtk_text_buffer_get_end_iter(buffer, &end_note);
+        gtk_text_buffer_delete(buffer, &start_note, &end_note);
+        gtk_text_buffer_get_iter_at_offset(buffer, &note_iter, 0);
+        gtk_text_buffer_create_tag(buffer, "red_fg", "foreground", "red", NULL);
+        gtk_text_buffer_insert_with_tags_by_name(buffer, &note_iter, "Danh sách ghi chú rỗng", -1, "red_fg", NULL);
+    }
 }
 
 void about()

@@ -18,19 +18,16 @@
 #define MAX 1000
 
 GtkBuilder *builder;
-GtkWidget *window_login, *window_register, *window_main, *window_advanced, *window_note, *window_about;
+GtkWidget *window_login, *window_register, *window_main, *window_advanced, *window_note, *window_about, *window_note;
 GtkEntryCompletion *comple;
 
 GtkListStore *list;
 GtkTreeIter suggestion_iter;
-// GtkTreeIter translation_itr;
 
 GtkEntry *log_acc, *log_pass, *reg_acc, *reg_pass, *retype_pass, *searchentry, *entry_newword, *entry_meanword, *entry_del;
 
 GtkWidget *reg_noti, *log_noti, *username, *textview1, *textview2, *textview3, *textview4, *textview_his;
 
-BTA *dict;
-BTA *note;
 char htr[MAX];
 char buftrans[MAX];
 int sockfd;
@@ -38,6 +35,7 @@ char key[MAX];
 char info1[MAX]; 
 char info2[MAX];
 char recv_info[MAX];
+char user[MAX];
 
 GdkColor red;
 GdkColor green;

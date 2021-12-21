@@ -15,7 +15,7 @@ int main_handler(int argc, char **argv)
     log_acc = GTK_WIDGET(gtk_builder_get_object(builder, "log_acc"));
     log_pass = GTK_WIDGET(gtk_builder_get_object(builder, "log_pass"));
     log_noti = GTK_WIDGET(gtk_builder_get_object(builder, "log_noti"));
-
+    
     g_signal_connect(window_login, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
     g_object_unref(builder);
@@ -166,6 +166,7 @@ void show_main_window()
     gtk_widget_show(window_main);
     gtk_widget_hide(window_login);
 
+    get_history();
     g_signal_connect(searchentry, "key_press_event", G_CALLBACK(on_key_press), NULL);
     g_signal_connect(window_main, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 }
@@ -259,6 +260,8 @@ void translate()
                 gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, edited_mean, -1, "red_fg", NULL);
                 gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, origin_mean, -1, "blue_fg", NULL);
             }
+            strcpy(info1,"");
+            get_history();
         }
     }
     free(edited_mean);
@@ -295,6 +298,18 @@ void extend()
 
     g_object_unref(builder);
     gtk_widget_show(window_advanced);
+}
+void get_history(){
+        make_protocol("SHIS",user,NULL);
+        if (strcmp(key, "NOKE") == 0)
+        printf("%s", info1);
+            // show_message(window_advanced, GTK_MESSAGE_ERROR, "ERROR!", info1);
+        else if (strcmp(key, "OKE") == 0)
+        {
+            printf("%s", info1);
+        set_mean_textview_text(textview_his, info1);
+        }
+            // show_message(window_advanced, GTK_MESSAGE_INFO, "SUCCESS!", "Thêm từ thành công");
 }
 
 void add_to_dict()

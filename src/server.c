@@ -289,13 +289,10 @@ void del_dict()
 {
     char *value = (char *)malloc(sizeof(char) * MAX);
     int rsize;
-    dict = btopn("../db/dict.bt", 0, 0);
     user_dict = btopn(make_dict_path(username), 0, 0);
     btpos(dict, ZSTART);
     btpos(user_dict, ZSTART);
-    if (!btsel(dict, info1, value, MAX, &rsize))
-        make_protocol("NOKE", "Bạn chỉ có thể xóa những từ trong từ điển cá nhân");
-    else if (!btsel(user_dict, info1, value, MAX, &rsize))
+    if (!btsel(user_dict, info1, value, MAX, &rsize))
     {
         if (!btdel(user_dict, info1))
             make_protocol("OKE", NULL);
@@ -306,7 +303,6 @@ void del_dict()
         make_protocol("NOKE", "Từ bạn muốn xóa không có trong từ điển");
 
     free(value);
-    btcls(dict);
     btcls(user_dict);
 }
 

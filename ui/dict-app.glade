@@ -573,6 +573,7 @@ Phùng Đình Sơn		20184189
     <property name="title" translatable="yes">Từ điển Anh - Việt</property>
     <property name="default_width">439</property>
     <property name="default_height">250</property>
+    <property name="icon">art_logo.jpg</property>
     <child type="titlebar">
       <placeholder/>
     </child>
@@ -852,8 +853,10 @@ Phùng Đình Sơn		20184189
               <object class="GtkTextView" id="textview1">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="pixels_above_lines">100</property>
+                <property name="editable">False</property>
+                <property name="wrap_mode">word</property>
                 <property name="justification">center</property>
+                <property name="top_margin">100</property>
                 <property name="monospace">True</property>
               </object>
             </child>

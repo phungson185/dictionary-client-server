@@ -103,10 +103,8 @@ void registerr()
 
     if (strcmp(info1, "") == 0 || strcmp(info2, "") == 0 || strcmp(repass, "") == 0)
         show_message(window_register, GTK_MESSAGE_ERROR, "ERROR!", "Thông tin đăng ký còn thiếu");
-    // label_set_text(ERROR, reg_noti, "Thông tin đăng ký còn thiếu");
     else if (strcmp(info2, repass) != 0)
         show_message(window_register, GTK_MESSAGE_ERROR, "ERROR!", "Mật khẩu không khớp");
-    // label_set_text(ERROR, reg_noti, "Mật khẩu không khớp");
     else
     {
         make_protocol("REG", info1, info2);
@@ -115,11 +113,9 @@ void registerr()
             gtk_widget_hide(window_register);
             show_message(window_login, GTK_MESSAGE_INFO, "SUCCESS!", "Đăng ký thành công");
             gtk_entry_set_text(GTK_ENTRY(log_acc), info1);
-            // label_set_text(SUCCESS, log_noti, "Đăng ký thành công");
         }
         else if (strcmp(key, "NOKE") == 0)
             show_message(window_register, GTK_MESSAGE_ERROR, "ERROR!", info1);
-        // label_set_text(ERROR, reg_noti, info1);
     }
     free(repass);
 }
@@ -130,7 +126,6 @@ void login()
     strcpy(info2, gtk_entry_get_text(GTK_ENTRY(log_pass)));
     if (strcmp(info1, "") == 0 || strcmp(info2, "") == 0)
         show_message(window_login, GTK_MESSAGE_ERROR, "ERROR!", "Thông tin đăng nhập còn thiếu");
-    // label_set_text(ERROR, log_noti, "Thông tin đăng nhập còn thiếu");
     else
     {
         make_protocol("LOG", info1, info2);
@@ -140,7 +135,6 @@ void login()
         }
         else if (strcmp(key, "NOKE") == 0)
             show_message(window_login, GTK_MESSAGE_ERROR, "ERROR!", info1);
-        // label_set_text(ERROR, log_noti, info1);
     }
 }
 
@@ -228,8 +222,9 @@ void set_mean_textview_text(GtkWidget *textview, char *text)
 void translate()
 {
     int rsize;
+    char* edited_mean = (char *)malloc(sizeof(char) * MAX);
+    char* origin_mean = (char *)malloc(sizeof(char) * MAX);
     gchar gettext[MAX];
-
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
     if (strcmp(gettext, "") == 0)
         set_mean_textview_text(textview1, "");
@@ -252,18 +247,21 @@ void translate()
             gtk_text_buffer_create_tag(buffer, "blue_fg", "foreground", "blue", NULL);
             gtk_text_buffer_create_tag(buffer, "red_fg", "foreground", "red", NULL);
             gtk_text_buffer_get_iter_at_offset(buffer, &translation_iter, 0);
-
             if (strcmp(info1, "") == 0)
                 gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, info2, -1, "blue_fg", NULL);
+            else if (strcmp(info2, "") ==0)
+                gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, info1, -1, "blue_fg", NULL);
             else
             {
-                gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, strcat("Nghĩa đã sửa: ", info1), -1, "red_fg", NULL);
-                gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, strcat("Nghĩa gốc: ", info2), -1, "blue_fg", NULL);
-                // gtk_text_view_set_buffer(GTK_TEXT_VIEW(textview1), buffer);
+                sprintf(edited_mean, "Nghĩa đã sửa: %s\n", info1);  
+                sprintf(origin_mean, "Nghĩa gốc: %s", info2);  
+                gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, edited_mean, -1, "red_fg", NULL);
+                gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, origin_mean, -1, "blue_fg", NULL);
             }
-            // gtk_text_iter_free(&translation_iter);
         }
     }
+    free(edited_mean);
+    free(origin_mean);
 }
 
 void clear_history()
@@ -294,8 +292,6 @@ void extend()
         gtk_entry_set_text(GTK_ENTRY(entry_del), gettext);
     }
 
-    // textview2 = GTK_WIDGET(gtk_builder_get_object(builder, "textview2"));
-
     g_object_unref(builder);
     gtk_widget_show(window_advanced);
 }
@@ -308,16 +304,13 @@ void add_to_dict()
     strcpy(mean_word, gtk_entry_get_text(GTK_ENTRY(entry_meanword)));
     if (strcmp(new_word, "") == 0 || strcmp(mean_word, "") == 0)
         show_message(window_advanced, GTK_MESSAGE_ERROR, "ERROR!", "Thông tin thêm từ còn thiếu");
-    // gtk_label_set_text(GTK_LABEL(textview2), "Thông tin thêm từ còn thiếu");
     else
     {
         make_protocol("ADICT", new_word, mean_word);
         if (strcmp(key, "NOKE") == 0)
             show_message(window_advanced, GTK_MESSAGE_ERROR, "ERROR!", info1);
-        // gtk_label_set_text(GTK_LABEL(textview2), info1);
         else if (strcmp(key, "OKE") == 0)
             show_message(window_advanced, GTK_MESSAGE_INFO, "SUCCESS!", "Thêm từ thành công");
-        // gtk_label_set_text(GTK_LABEL(textview2), "Thêm từ thành công");
     }
 }
 
@@ -329,16 +322,13 @@ void repair_word()
     strcpy(mean_word, gtk_entry_get_text(GTK_ENTRY(entry_meanword)));
     if (strcmp(new_word, "") == 0 || strcmp(mean_word, "") == 0)
         show_message(window_advanced, GTK_MESSAGE_ERROR, "ERROR!", "Thông tin sửa từ còn thiếu");
-    // gtk_label_set_text(GTK_LABEL(textview2), "Thông tin sửa từ còn thiếu");
     else
     {
         make_protocol("EDIT", new_word, mean_word);
         if (strcmp(key, "NOKE") == 0)
             show_message(window_advanced, GTK_MESSAGE_ERROR, "ERROR!", info1);
-        // gtk_label_set_text(GTK_LABEL(textview2), info1);
         else if (strcmp(key, "OKE") == 0)
             show_message(window_advanced, GTK_MESSAGE_INFO, "SUCCESS!", "Sửa từ thành công");
-        // gtk_label_set_text(GTK_LABEL(textview2), "Sửa từ thành công");
     }
 }
 
@@ -348,16 +338,13 @@ void delete_from_dict()
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(entry_del)));
     if (strcmp(gettext, "") == 0)
         show_message(window_advanced, GTK_MESSAGE_ERROR, "ERROR!", "Bạn chưa nhập từ cần xóa");
-    // gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập từ cần xóa");
     else
     {
         make_protocol("DDICT", gettext, NULL);
         if (strcmp(key, "NOKE") == 0)
             show_message(window_advanced, GTK_MESSAGE_ERROR, "ERROR!", info1);
-        // gtk_label_set_text(GTK_LABEL(textview2), info1);
         else if (strcmp(key, "OKE") == 0)
             show_message(window_advanced, GTK_MESSAGE_INFO, "SUCCESS!", "Xóa từ thành công");
-        // gtk_label_set_text(GTK_LABEL(textview2), "Xóa từ thành công");
     }
 }
 
@@ -372,9 +359,7 @@ void add_to_note()
 
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
     if (strcmp(gettext, "") == 0)
-    {
         set_mean_textview_text(textview1, "Bạn chưa nhập vào từ cần thêm vào danh sách ghi chú");
-    }
     else
     {
         make_protocol("ANOTE", gettext, NULL);

@@ -22,7 +22,8 @@ GtkWidget *window_login, *window_register, *window_main, *window_advanced, *wind
 GtkEntryCompletion *comple;
 
 GtkListStore *list;
-GtkTreeIter Iter;
+GtkTreeIter suggestion_iter;
+// GtkTreeIter translation_itr;
 
 GtkEntry *log_acc, *log_pass, *reg_acc, *reg_pass, *retype_pass, *searchentry, *entry_newword, *entry_meanword, *entry_del;
 

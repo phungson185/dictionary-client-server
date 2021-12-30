@@ -470,14 +470,13 @@ void start()
     window_game = GTK_WIDGET(gtk_builder_get_object(builder, "window_game"));
     gtk_builder_connect_signals(builder, NULL);
 
-    send(sockfd, "PRAC", MAX, 0);
-    recv(sockfd, recv_info, MAX, 0);
-    puts(recv_info);
-    // make_protocol("PRAC", user, NULL);
+    send(sockfd, "PRAC", MAXLINE, 0);
+    recv(sockfd, recv_question, MAXLINE, 0);
+    puts(recv_question);
 
     g_object_unref(builder);
     gtk_widget_show(window_game);
-    // gtk_widget_destroy(window_practice);
+    gtk_widget_destroy(window_practice);
 }
 
 void exit_game()

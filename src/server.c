@@ -20,7 +20,7 @@ int connfd;
 char username[MAX];
 char suggest_protocol_str[MAX];
 char get_note_protol_str[MAX];
-char practice_protocol_str[MAX];
+char practice_protocol_str[MAXLINE];
 
 char key[MAX];
 char info1[MAX];
@@ -472,17 +472,18 @@ void free_id_word()
     jrb_free_tree(note);
 }
 
-void wrong_word_str_cat(int wrong_word_id){
+void wrong_word_str_cat(int wrong_word_id)
+{
     strcat(practice_protocol_str, "|");
-    word* w = (word *)(jrb_find_int(note, wrong_word_id)->val.v);
-    strcat(practice_protocol_str, w->vie);
-}   
+    word *wd = (word *)(jrb_find_int(note, wrong_word_id)->val.v);
+    strcat(practice_protocol_str, wd->vie);
+}
 
 void practice()
 {
+    strcpy(practice_protocol_str, "OKE");
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
-    strcpy(practice_protocol_str, "OKE");
     int rsize, note_size = 0;
     int correct_answer_position;
     int wrong_answer_id1 = 0, wrong_answer_id2 = 0, wrong_answer_id3 = 0;
@@ -501,32 +502,31 @@ void practice()
     protocol_str_cat(convert_int_to_string(note_size));
 
     // randomize array of note id
-    int arr[note_size];
+    int* note_id_arr = (int *)malloc(sizeof(int) * note_size);
     for (int i = 0; i < note_size; i++)
-        arr[i] = i;
-    randomize(arr, note_size);
-
+        note_id_arr[i] = i;
+    randomize(note_id_arr, note_size);
+    printArray(note_id_arr, note_size);
     // insert question and answer to protocol
     for (int i = 0; i < note_size; i++)
     {
         // get word of question
-        word *w = (word *)(jrb_find_int(note, arr[i])->val.v);
+        word *w = (word *)(jrb_find_int(note, note_id_arr[i])->val.v);
+        printf("%d:%s-%s\n", note_id_arr[i], w->eng, w->vie);
 
-        // insert correct answer position to protocol
-        correct_answer_position = rand() % 4 + 1;
-
-        // insert correct answer to protocol
+        // insert correct answer and position to protocol
         protocol_str_cat(w->eng);
-        protocol_str_cat(convert_int_to_string(correct_answer_position));
+        protocol_str_cat(convert_int_to_string(note_id_arr[i]));
         protocol_str_cat(w->vie);
 
         // generate wrong answer id
-        wrong_answer_id1 = wrong_answer_id2 = wrong_answer_id3 = arr[i];
-        while (wrong_answer_id1 == arr[i])
+        srand(time(NULL));
+        wrong_answer_id1 = wrong_answer_id2 = wrong_answer_id3 = note_id_arr[i];
+        while (wrong_answer_id1 == note_id_arr[i])
             wrong_answer_id1 = rand() % note_size;
-        while (wrong_answer_id2 == arr[i] || wrong_answer_id2 == wrong_answer_id1)
+        while (wrong_answer_id2 == note_id_arr[i] || wrong_answer_id2 == wrong_answer_id1)
             wrong_answer_id2 = rand() % note_size;
-        while (wrong_answer_id3 == arr[i] || wrong_answer_id3 == wrong_answer_id1 || wrong_answer_id3 == wrong_answer_id2)
+        while (wrong_answer_id3 == note_id_arr[i] || wrong_answer_id3 == wrong_answer_id1 || wrong_answer_id3 == wrong_answer_id2)
             wrong_answer_id3 = rand() % note_size;
 
         // insert wrong answer to protocol
@@ -534,8 +534,10 @@ void practice()
         wrong_word_str_cat(wrong_answer_id2);
         wrong_word_str_cat(wrong_answer_id3);
     }
-    send(connfd, practice_protocol_str, MAX, 0);
+    printf("%s\n", practice_protocol_str);
+    send(connfd, practice_protocol_str, MAXLINE, 0);
     free_id_word();
+    free(note_id_arr);
     free(eng);
     free(vie);
     btcls(user_note);

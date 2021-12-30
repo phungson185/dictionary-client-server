@@ -35,6 +35,7 @@ char key[MAX];
 char info1[MAX]; 
 char info2[MAX];
 char recv_info[MAX];
+char recv_question[MAXLINE];
 char user[MAX];
 
 GdkColor red;

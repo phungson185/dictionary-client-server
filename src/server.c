@@ -5,7 +5,7 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <signal.h>
-
+#include <time.h>
 #include <jrb.h>
 #include <jval.h>
 #include <btree.h>
@@ -20,6 +20,7 @@ int connfd;
 char username[MAX];
 char suggest_protocol_str[MAX];
 char get_note_protol_str[MAX];
+char practice_protocol_str[MAX];
 
 char key[MAX];
 char info1[MAX];
@@ -31,6 +32,7 @@ BTA *user;
 BTA *dict;
 BTA *user_dict;
 BTA *user_note;
+JRB note = NULL;
 
 void sig_chld(int signo)
 {
@@ -113,12 +115,12 @@ void registerr()
             if ((user_dict = btcrt(make_dict_path(info1), 0, 0)) == NULL)
             {
                 perror("Lỗi không thể tạo file từ điển cá nhân");
-                return -1;
+                return;
             }
             if ((user_note = btcrt(make_note_path(info1), 0, 0)) == NULL)
             {
                 perror("Lỗi không thể tạo file note");
-                return -1;
+                return;
             }
             make_protocol("OKE", NULL);
         }
@@ -377,7 +379,8 @@ void del_all_note()
 {
     if ((user_note = btcrt(make_note_path(info1), 0, 0)) == NULL)
         make_protocol("NOKE", "Xóa tất cả ghi chú thất bại");
-    else make_protocol("OKE", NULL);
+    else
+        make_protocol("OKE", NULL);
     btcls(user_note);
 }
 
@@ -399,6 +402,140 @@ void get_note()
         make_protocol("NOKE", "Danh sách ghi chú rỗng");
     else
         send(connfd, get_note_protol_str, MAX, 0);
+    free(eng);
+    free(vie);
+    btcls(user_note);
+}
+
+void swap(int *a, int *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void printArray(int arr[], int n)
+{
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+}
+
+void randomize(int arr[], int n)
+{
+    srand(time(NULL));
+
+    for (int i = n - 1; i > 0; i--)
+    {
+        int j = rand() % (i + 1);
+        swap(&arr[i], &arr[j]);
+    }
+}
+
+typedef struct
+{
+    char *eng;
+    char *vie;
+} word;
+
+word *make_word(char *eng, char *vie)
+{
+    word *w = (word *)malloc(sizeof(word));
+    w->eng = strdup(eng);
+    w->vie = strdup(vie);
+    return w;
+}
+
+char *convert_int_to_string(int i)
+{
+    char *str = (char *)malloc(sizeof(char) * MAX);
+    sprintf(str, "%d", i);
+    return str;
+}
+
+void protocol_str_cat(char *str)
+{
+    strcat(practice_protocol_str, "|");
+    strcat(practice_protocol_str, str);
+}
+
+void free_id_word()
+{
+    JRB ptr;
+    jrb_traverse(ptr, note)
+    {
+        word *w = (word *)ptr->val.v;
+        free(w->eng);
+        free(w->vie);
+        free(w);
+    }
+    jrb_free_tree(note);
+}
+
+void wrong_word_str_cat(int wrong_word_id){
+    strcat(practice_protocol_str, "|");
+    word* w = (word *)(jrb_find_int(note, wrong_word_id)->val.v);
+    strcat(practice_protocol_str, w->vie);
+}   
+
+void practice()
+{
+    char *eng = (char *)malloc(sizeof(char) * MAX);
+    char *vie = (char *)malloc(sizeof(char) * MAX);
+    strcpy(practice_protocol_str, "OKE");
+    int rsize, note_size = 0;
+    int correct_answer_position;
+    int wrong_answer_id1 = 0, wrong_answer_id2 = 0, wrong_answer_id3 = 0;
+    note = make_jrb();
+    user_note = btopn(make_note_path(username), 0, 0);
+
+    // scan user note to make note tree
+    btpos(user_note, ZSTART);
+    while (!btseln(user_note, eng, vie, MAX, &rsize))
+    {
+        jrb_insert_int(note, note_size, (Jval){.v = make_word(eng, vie)});
+        note_size++;
+    }
+
+    // insert note size to protocol
+    protocol_str_cat(convert_int_to_string(note_size));
+
+    // randomize array of note id
+    int arr[note_size];
+    for (int i = 0; i < note_size; i++)
+        arr[i] = i;
+    randomize(arr, note_size);
+
+    // insert question and answer to protocol
+    for (int i = 0; i < note_size; i++)
+    {
+        // get word of question
+        word *w = (word *)(jrb_find_int(note, arr[i])->val.v);
+
+        // insert correct answer position to protocol
+        correct_answer_position = rand() % 4 + 1;
+
+        // insert correct answer to protocol
+        protocol_str_cat(w->eng);
+        protocol_str_cat(convert_int_to_string(correct_answer_position));
+        protocol_str_cat(w->vie);
+
+        // generate wrong answer id
+        wrong_answer_id1 = wrong_answer_id2 = wrong_answer_id3 = arr[i];
+        while (wrong_answer_id1 == arr[i])
+            wrong_answer_id1 = rand() % note_size;
+        while (wrong_answer_id2 == arr[i] || wrong_answer_id2 == wrong_answer_id1)
+            wrong_answer_id2 = rand() % note_size;
+        while (wrong_answer_id3 == arr[i] || wrong_answer_id3 == wrong_answer_id1 || wrong_answer_id3 == wrong_answer_id2)
+            wrong_answer_id3 = rand() % note_size;
+
+        // insert wrong answer to protocol
+        wrong_word_str_cat(wrong_answer_id1);
+        wrong_word_str_cat(wrong_answer_id2);
+        wrong_word_str_cat(wrong_answer_id3);
+    }
+    send(connfd, practice_protocol_str, MAX, 0);
+    free_id_word();
     free(eng);
     free(vie);
     btcls(user_note);
@@ -476,6 +613,8 @@ int main(int argc, char **argv)
                     get_note();
                 else if (strcmp("DANOTE", key) == 0)
                     del_all_note();
+                else if (strcmp("PRAC", key) == 0)
+                    practice();
             }
 
             if (n < 0)

@@ -18,7 +18,7 @@
 #define MAX 1000
 
 GtkBuilder *builder;
-GtkWidget *window_login, *window_register, *window_main, *window_advanced, *window_note, *window_about, *window_note;
+GtkWidget *window_login, *window_register, *window_main, *window_advanced, *window_note, *window_about, *window_practice, *window_game;
 GtkEntryCompletion *comple;
 
 GtkListStore *list;

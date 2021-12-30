@@ -122,6 +122,7 @@ Phùng Đình Sơn		20184189
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="placeholder_text" translatable="yes">Nghĩa ...</property>
+            <property name="show_emoji_icon">True</property>
           </object>
           <packing>
             <property name="x">14</property>
@@ -219,8 +220,9 @@ Phùng Đình Sơn		20184189
   <object class="GtkWindow" id="window_game">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Quick Test</property>
-    <property name="default_width">440</property>
+    <property name="default_width">410</property>
     <property name="default_height">250</property>
+    <property name="deletable">False</property>
     <child type="titlebar">
       <placeholder/>
     </child>
@@ -230,16 +232,116 @@ Phùng Đình Sơn		20184189
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkLabel" id="lbl_yeucau">
+          <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="margin_left">10</property>
+            <property name="margin_right">10</property>
             <property name="margin_top">10</property>
-            <property name="label" translatable="yes">Tìm nghĩa của từ sau</property>
+            <property name="margin_bottom">3</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Bài luyện tập trắc nghiệm</property>
+                <attributes>
+                  <attribute name="font-desc" value="Sans Bold 10"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Câu số:  </property>
+                <property name="xalign">1</property>
+                <attributes>
+                  <attribute name="font-desc" value="Sans Bold 10"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">1/30</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="margin_left">10</property>
+            <property name="margin_right">10</property>
+            <property name="margin_bottom">10</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Tìm nghĩa của từ sau</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Số câu đúng: </property>
+                <property name="xalign">0.97000002861022949</property>
+                <attributes>
+                  <attribute name="font-desc" value="Sans Bold 10"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_right">13</property>
+                <property name="label" translatable="yes">10</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
           </packing>
         </child>
         <child>
@@ -256,7 +358,7 @@ Phùng Đình Sơn		20184189
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">3</property>
           </packing>
         </child>
         <child>
@@ -277,7 +379,7 @@ Phùng Đình Sơn		20184189
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
-            <property name="position">2</property>
+            <property name="position">4</property>
           </packing>
         </child>
         <child>
@@ -298,7 +400,7 @@ Phùng Đình Sơn		20184189
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
-            <property name="position">3</property>
+            <property name="position">5</property>
           </packing>
         </child>
         <child>
@@ -319,7 +421,7 @@ Phùng Đình Sơn		20184189
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
-            <property name="position">4</property>
+            <property name="position">6</property>
           </packing>
         </child>
         <child>
@@ -340,7 +442,7 @@ Phùng Đình Sơn		20184189
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
-            <property name="position">5</property>
+            <property name="position">7</property>
           </packing>
         </child>
         <child>
@@ -386,22 +488,7 @@ Phùng Đình Sơn		20184189
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">7</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel" id="textview4">
-            <property name="height_request">50</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <attributes>
-              <attribute name="font-desc" value="Sans Bold 10"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">7</property>
+            <property name="position">8</property>
           </packing>
         </child>
       </object>
@@ -464,6 +551,7 @@ Phùng Đình Sơn		20184189
             <property name="width_request">225</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="input_purpose">password</property>
           </object>
           <packing>
             <property name="x">140</property>
@@ -567,12 +655,13 @@ Phùng Đình Sơn		20184189
     </child>
   </object>
   <object class="GtkWindow" id="window_main">
-    <property name="width_request">792</property>
+    <property name="width_request">862</property>
     <property name="height_request">0</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Từ điển Anh - Việt</property>
     <property name="default_width">439</property>
     <property name="default_height">250</property>
+    <property name="icon">art_logo.jpg</property>
     <child type="titlebar">
       <placeholder/>
     </child>
@@ -591,13 +680,13 @@ Phùng Đình Sơn		20184189
             <property name="primary_icon_sensitive">False</property>
           </object>
           <packing>
-            <property name="x">272</property>
+            <property name="x">222</property>
             <property name="y">15</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton">
-            <property name="label" translatable="yes">    Dịch</property>
+            <property name="label" translatable="yes">       Dịch</property>
             <property name="width_request">75</property>
             <property name="height_request">55</property>
             <property name="visible">True</property>
@@ -606,18 +695,18 @@ Phùng Đình Sơn		20184189
             <property name="receives_default">True</property>
             <property name="always_show_image">True</property>
             <signal name="clicked" handler="translate" swapped="no"/>
-            <accelerator key="Return" signal="clicked"/>
             <accelerator key="Return" signal="activate"/>
+            <accelerator key="Return" signal="clicked"/>
           </object>
           <packing>
-            <property name="x">703</property>
+            <property name="x">654</property>
             <property name="y">15</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton">
-            <property name="label" translatable="yes">         Mở rộng</property>
-            <property name="width_request">120</property>
+            <property name="label" translatable="yes">   Mở rộng</property>
+            <property name="width_request">199</property>
             <property name="height_request">40</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -626,29 +715,27 @@ Phùng Đình Sơn		20184189
           </object>
           <packing>
             <property name="x">15</property>
-            <property name="y">80</property>
+            <property name="y">79</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton">
-            <property name="label" translatable="yes">Thêm ghi chú</property>
-            <property name="width_request">120</property>
-            <property name="height_request">40</property>
+            <property name="label" translatable="yes"> </property>
+            <property name="height_request">55</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <signal name="clicked" handler="add_to_note" swapped="no"/>
           </object>
           <packing>
-            <property name="x">15</property>
-            <property name="y">127</property>
+            <property name="x">742</property>
+            <property name="y">15</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton">
-            <property name="label" translatable="yes">   Xóa ghi chú</property>
-            <property name="width_request">120</property>
-            <property name="height_request">40</property>
+            <property name="label" translatable="yes"> </property>
+            <property name="height_request">55</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -656,39 +743,36 @@ Phùng Đình Sơn		20184189
             <signal name="clicked" handler="delete_from_note" swapped="no"/>
           </object>
           <packing>
-            <property name="x">143</property>
-            <property name="y">128</property>
+            <property name="x">797</property>
+            <property name="y">15</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton">
             <property name="label" translatable="yes">      Luyện tập</property>
-            <property name="width_request">120</property>
+            <property name="width_request">199</property>
             <property name="height_request">40</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="clicked" handler="note" swapped="no"/>
+            <signal name="clicked" handler="practice" swapped="no"/>
           </object>
           <packing>
-            <property name="x">143</property>
-            <property name="y">80</property>
+            <property name="x">15</property>
+            <property name="y">167</property>
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="username">
-            <property name="width_request">561</property>
-            <property name="height_request">28</property>
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="xalign">0</property>
-            <attributes>
-              <attribute name="font-desc" value="Sans Bold 10"/>
-            </attributes>
+            <property name="margin_top">5</property>
+            <property name="margin_bottom">9</property>
+            <property name="label" translatable="yes">Cung cấp bởi</property>
           </object>
           <packing>
-            <property name="x">34</property>
-            <property name="y">318</property>
+            <property name="x">619</property>
+            <property name="y">368</property>
           </packing>
         </child>
         <child>
@@ -697,7 +781,6 @@ Phùng Đình Sơn		20184189
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="relief">none</property>
-            <signal name="clicked" handler="about" swapped="no"/>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
@@ -711,8 +794,8 @@ Phùng Đình Sơn		20184189
             </child>
           </object>
           <packing>
-            <property name="x">615</property>
-            <property name="y">316</property>
+            <property name="x">699</property>
+            <property name="y">366</property>
           </packing>
         </child>
         <child>
@@ -722,12 +805,12 @@ Phùng Đình Sơn		20184189
             <property name="label" translatable="yes">Lịch sử tra cứu
 </property>
             <attributes>
-              <attribute name="font-desc" value="Sans Bold 12"/>
+              <attribute name="font-desc" value="Sans Bold 11"/>
             </attributes>
           </object>
           <packing>
-            <property name="x">16</property>
-            <property name="y">178</property>
+            <property name="x">15</property>
+            <property name="y">224</property>
           </packing>
         </child>
         <child>
@@ -741,13 +824,13 @@ Phùng Đình Sơn		20184189
             <accelerator key="l" signal="activate" modifiers="GDK_CONTROL_MASK"/>
           </object>
           <packing>
-            <property name="x">190</property>
-            <property name="y">171</property>
+            <property name="x">143</property>
+            <property name="y">216</property>
           </packing>
         </child>
         <child>
           <object class="GtkScrolledWindow">
-            <property name="width_request">247</property>
+            <property name="width_request">200</property>
             <property name="height_request">103</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -757,97 +840,19 @@ Phùng Đình Sơn		20184189
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="editable">False</property>
+                <property name="wrap_mode">word</property>
               </object>
             </child>
           </object>
           <packing>
             <property name="x">15</property>
-            <property name="y">208</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkImage">
-            <property name="width_request">134</property>
-            <property name="height_request">31</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="pixbuf">art_main.jpg</property>
-          </object>
-          <packing>
-            <property name="x">16</property>
-            <property name="y">16</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkImage">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="stock">gtk-open</property>
-          </object>
-          <packing>
-            <property name="x">36</property>
-            <property name="y">91</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkImage">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="stock">gtk-apply</property>
-          </object>
-          <packing>
-            <property name="x">160</property>
-            <property name="y">91</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkImage">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="stock">gtk-about</property>
-          </object>
-          <packing>
-            <property name="x">17</property>
-            <property name="y">139</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkImage">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="stock">gtk-delete</property>
-          </object>
-          <packing>
-            <property name="x">151</property>
-            <property name="y">139</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkImage">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="stock">gtk-delete</property>
-          </object>
-          <packing>
-            <property name="x">199</property>
-            <property name="y">180</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkImage">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="stock">gtk-find</property>
-          </object>
-          <packing>
-            <property name="x">711</property>
-            <property name="y">34</property>
+            <property name="y">256</property>
           </packing>
         </child>
         <child>
           <object class="GtkScrolledWindow">
-            <property name="width_request">504</property>
-            <property name="height_request">230</property>
+            <property name="width_request">623</property>
+            <property name="height_request">279</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="shadow_type">in</property>
@@ -864,8 +869,116 @@ Phùng Đình Sơn		20184189
             </child>
           </object>
           <packing>
-            <property name="x">273</property>
-            <property name="y">81</property>
+            <property name="x">224</property>
+            <property name="y">79</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-open</property>
+            <property name="icon_size">3</property>
+          </object>
+          <packing>
+            <property name="x">57</property>
+            <property name="y">87</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-apply</property>
+            <property name="icon_size">3</property>
+          </object>
+          <packing>
+            <property name="x">57</property>
+            <property name="y">175</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-about</property>
+            <property name="icon_size">5</property>
+          </object>
+          <packing>
+            <property name="x">751</property>
+            <property name="y">27</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-stop</property>
+            <property name="icon_size">5</property>
+          </object>
+          <packing>
+            <property name="x">806</property>
+            <property name="y">27</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-delete</property>
+          </object>
+          <packing>
+            <property name="x">152</property>
+            <property name="y">226</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-find</property>
+            <property name="icon_size">3</property>
+          </object>
+          <packing>
+            <property name="x">663</property>
+            <property name="y">31</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton">
+            <property name="label" translatable="yes">     Từ ghi chú</property>
+            <property name="width_request">199</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="note" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">15</property>
+            <property name="y">127</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-file</property>
+            <property name="icon_size">3</property>
+          </object>
+          <packing>
+            <property name="x">57</property>
+            <property name="y">132</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="pixbuf">art_main__.jpg</property>
+          </object>
+          <packing>
+            <property name="x">17</property>
+            <property name="y">19</property>
           </packing>
         </child>
         <child>
@@ -873,10 +986,29 @@ Phùng Đình Sơn		20184189
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="icon_name">x-office-address-book</property>
+            <property name="icon_size">3</property>
           </object>
           <packing>
             <property name="x">15</property>
-            <property name="y">323</property>
+            <property name="y">370</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="username">
+            <property name="width_request">201</property>
+            <property name="height_request">24</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">lhjhjhkjhkhkjh</property>
+            <property name="justify">right</property>
+            <property name="ellipsize">end</property>
+            <property name="max_width_chars">1</property>
+            <property name="track_visited_links">False</property>
+            <property name="xalign">0</property>
+          </object>
+          <packing>
+            <property name="x">41</property>
+            <property name="y">371</property>
           </packing>
         </child>
       </object>
@@ -896,27 +1028,15 @@ Phùng Đình Sơn		20184189
         <property name="can_focus">False</property>
         <child>
           <object class="GtkButton">
-            <property name="label" translatable="yes">    Luyện tập</property>
-            <property name="width_request">100</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-          </object>
-          <packing>
-            <property name="x">361</property>
-            <property name="y">223</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton">
             <property name="label" translatable="yes">  Xóa toàn bộ</property>
             <property name="width_request">126</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <signal name="clicked" handler="del_all_note" swapped="no"/>
           </object>
           <packing>
-            <property name="x">223</property>
+            <property name="x">347</property>
             <property name="y">224</property>
           </packing>
         </child>
@@ -927,18 +1047,7 @@ Phùng Đình Sơn		20184189
             <property name="stock">gtk-delete</property>
           </object>
           <packing>
-            <property name="x">228</property>
-            <property name="y">232</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkImage">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="stock">gtk-select-color</property>
-          </object>
-          <packing>
-            <property name="x">369</property>
+            <property name="x">353</property>
             <property name="y">232</property>
           </packing>
         </child>
@@ -962,6 +1071,92 @@ Phùng Đình Sơn		20184189
           <packing>
             <property name="x">15</property>
             <property name="y">15</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkWindow" id="window_practice">
+    <property name="width_request">486</property>
+    <property name="height_request">266</property>
+    <property name="can_focus">False</property>
+    <property name="title" translatable="yes">Lịch sử luyện tập</property>
+    <child type="titlebar">
+      <placeholder/>
+    </child>
+    <child>
+      <object class="GtkFixed">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <child>
+          <object class="GtkButton">
+            <property name="label" translatable="yes">  Xóa toàn bộ</property>
+            <property name="width_request">126</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+          </object>
+          <packing>
+            <property name="x">240</property>
+            <property name="y">224</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-delete</property>
+          </object>
+          <packing>
+            <property name="x">245</property>
+            <property name="y">233</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="width_request">458</property>
+            <property name="height_request">204</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="shadow_type">in</property>
+            <child>
+              <object class="GtkTextView" id="textview3">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="editable">False</property>
+                <property name="justification">center</property>
+                <property name="monospace">True</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="x">15</property>
+            <property name="y">15</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton">
+            <property name="label" translatable="yes">  Bắt đầu</property>
+            <property name="width_request">95</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="start" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">378</property>
+            <property name="y">224</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-go-forward</property>
+          </object>
+          <packing>
+            <property name="x">384</property>
+            <property name="y">233</property>
           </packing>
         </child>
       </object>
@@ -1024,6 +1219,7 @@ Phùng Đình Sơn		20184189
             <property name="width_request">225</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="input_purpose">password</property>
           </object>
           <packing>
             <property name="x">172</property>
@@ -1063,6 +1259,7 @@ Phùng Đình Sơn		20184189
             <property name="width_request">225</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="input_purpose">password</property>
           </object>
           <packing>
             <property name="x">172</property>

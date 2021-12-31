@@ -498,25 +498,29 @@ void practice()
         note_size++;
     }
 
+    if (note_size < 4)
+    {
+        make_protocol("NOKE", "Danh sách từ ghi chú cần có 4 từ trở lên!");
+        return;
+    }
+
     // insert note size to protocol
     protocol_str_cat(convert_int_to_string(note_size));
 
     // randomize array of note id
-    int* note_id_arr = (int *)malloc(sizeof(int) * note_size);
+    int *note_id_arr = (int *)malloc(sizeof(int) * note_size);
     for (int i = 0; i < note_size; i++)
         note_id_arr[i] = i;
     randomize(note_id_arr, note_size);
-    printArray(note_id_arr, note_size);
     // insert question and answer to protocol
     for (int i = 0; i < note_size; i++)
     {
         // get word of question
         word *w = (word *)(jrb_find_int(note, note_id_arr[i])->val.v);
-        printf("%d:%s-%s\n", note_id_arr[i], w->eng, w->vie);
 
         // insert correct answer and position to protocol
         protocol_str_cat(w->eng);
-        protocol_str_cat(convert_int_to_string(note_id_arr[i]));
+        protocol_str_cat(convert_int_to_string(1 + rand() % 4));
         protocol_str_cat(w->vie);
 
         // generate wrong answer id
@@ -534,7 +538,6 @@ void practice()
         wrong_word_str_cat(wrong_answer_id2);
         wrong_word_str_cat(wrong_answer_id3);
     }
-    printf("%s\n", practice_protocol_str);
     send(connfd, practice_protocol_str, MAXLINE, 0);
     free_id_word();
     free(note_id_arr);

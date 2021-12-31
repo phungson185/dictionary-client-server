@@ -12,6 +12,8 @@
 #include <btree.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <stdbool.h>
+
 
 #define MAXLINE 4096   /*max text line length*/
 #define SERV_PORT 3000 /*port*/
@@ -27,6 +29,10 @@ GtkTreeIter suggestion_iter;
 GtkEntry *log_acc, *log_pass, *reg_acc, *reg_pass, *retype_pass, *searchentry, *entry_newword, *entry_meanword, *entry_del;
 
 GtkWidget *reg_noti, *log_noti, *username, *textview1, *textview2, *textview3, *textview4, *textview_his;
+
+GtkWidget *lbl_eng, *lbl_count_question, *lbl_total_question, *lbl_count_correct;
+
+GtkWidget *btn_vie1, *btn_vie2, *btn_vie3, *btn_vie4;
 
 char htr[MAX];
 char buftrans[MAX];

@@ -471,10 +471,10 @@ char *convert_int_to_string(int i)
 
 void set_answers(char *vie1, char *vie2, char *vie3, char *vie4)
 {
-    gtk_button_set_label(btn_vie1, vie1);
-    gtk_button_set_label(btn_vie2, vie2);
-    gtk_button_set_label(btn_vie3, vie3);
-    gtk_button_set_label(btn_vie4, vie4);
+    gtk_button_set_label(GTK_BUTTON(btn_vie1), vie1);
+    gtk_button_set_label(GTK_BUTTON(btn_vie2), vie2);
+    gtk_button_set_label(GTK_BUTTON(btn_vie3), vie3);
+    gtk_button_set_label(GTK_BUTTON(btn_vie4), vie4);
 }
 
 char *spliting_str;
@@ -493,10 +493,10 @@ char *split_question_str(char *question_str)
     char *vie4 = (char *)malloc(sizeof(char) * 100);
 
     count_question++;
-    gtk_label_set_text(lbl_count_question, convert_int_to_string(count_question));
+    gtk_label_set_text(GTK_LABEL(lbl_count_question), convert_int_to_string(count_question));
 
     if (e = strsep(&q, "|"))
-        gtk_label_set_text(lbl_eng, e);
+        gtk_label_set_text(GTK_LABEL(lbl_eng), e);
 
     if (e = strsep(&q, "|"))
         correct_position = atoi(e);
@@ -544,16 +544,17 @@ void start ()
 
     window_game = GTK_WIDGET(gtk_builder_get_object(builder, "window_game"));
 
-    lbl_count_question = GTK_WIDGET(gtk_builder_get_object(builder, "lbl_count_question"));
-    lbl_total_question = GTK_WIDGET(gtk_builder_get_object(builder, "lbl_total_question"));
-    lbl_count_correct = GTK_WIDGET(gtk_builder_get_object(builder, "lbl_count_correct"));
+    // lbl_count_question = gtk_builder_get_object(builder, "lbl_count_question");
+    // lbl_total_question = gtk_builder_get_object(builder, "lbl_total_question");
+    lbl_count_correct = gtk_builder_get_object(builder, "lbl_count_correct");
 
-    lbl_eng = GTK_WIDGET(gtk_builder_get_object(builder, "lbl_eng"));
+    lbl_eng = gtk_builder_get_object(builder, "lbl_eng");
 
-    btn_vie1 = GTK_WIDGET(gtk_builder_get_object(builder, "btn_vie1"));
-    btn_vie2 = GTK_WIDGET(gtk_builder_get_object(builder, "btn_vie2"));
-    btn_vie3 = GTK_WIDGET(gtk_builder_get_object(builder, "btn_vie3"));
-    btn_vie4 = GTK_WIDGET(gtk_builder_get_object(builder, "btn_vie4"));
+    btn_vie1 = gtk_builder_get_object(builder, "btn_vie1");
+    btn_vie2 = gtk_builder_get_object(builder, "btn_vie2");
+    btn_vie3 = gtk_builder_get_object(builder, "btn_vie3");
+    btn_vie4 = gtk_builder_get_object(builder, "btn_vie4");
+    
 
     send(sockfd, "PRAC", MAXLINE, 0);
     recv(sockfd, recv_question, MAXLINE, 0);
@@ -565,12 +566,12 @@ void start ()
     {
         show_message(window_game, GTK_MESSAGE_ERROR, "ERROR!", info1);
         gtk_widget_destroy(window_practice);
-        return;
+ 
     }
 
     char *total;
     if ((total = strsep(&str, "|")) != NULL)
-        gtk_label_set_text(lbl_total_question, total);
+        gtk_label_set_text(GTK_LABEL(lbl_total_question), total);
 
     count_question = 0;
     spliting_str = split_question_str(str);
@@ -583,76 +584,77 @@ void start ()
 
 void next()
 {
-    spliting_str = split_question_str(spliting_str);
     if (spliting_str == NULL)
-    {
-        printf("%s\n", "END");
-    }
+        {
+            printf("%s\n", "END");
+            return;
+        }
+    spliting_str = split_question_str(spliting_str);
 }
 
-// void set_disable_button()
-// {
-//     gtk_widget_set_sensitive(btn_vie1, false);
-//     gtk_widget_set_sensitive(btn_vie2, false);
-//     gtk_widget_set_sensitive(btn_vie3, false);
-//     gtk_widget_set_sensitive(btn_vie4, false);
-// }
+void set_disable_button()
+{
+    gtk_widget_set_sensitive(GTK_WIDGET(btn_vie1), false);
+    gtk_widget_set_sensitive(GTK_WIDGET(btn_vie2), false);
+    gtk_widget_set_sensitive(GTK_WIDGET(btn_vie3), false);
+    gtk_widget_set_sensitive(GTK_WIDGET(btn_vie4), false);
+}
 
-// void set_color_for_correct_answer(int p1, int p2, int p3, GtkWidget *widget1, GtkWidget *widget2, GtkWidget *widget3)
-// {
-//     if(correct_position == p1)
-//             gtk_widget_modify_fg(widget1, GTK_STATE_NORMAL, &green);
-//         else if(correct_position == p2)
-//             gtk_widget_modify_fg(widget2, GTK_STATE_NORMAL, &green);
-//         else if(correct_position == p3)
-//             gtk_widget_modify_fg(widget3, GTK_STATE_NORMAL, &green);
-// }
+void set_color_for_correct_answer(int p1, int p2, int p3, GtkWidget *widget1, GtkWidget *widget2, GtkWidget *widget3)
+{
+    if(correct_position == p1)
+            gtk_widget_modify_fg(widget1, GTK_STATE_NORMAL, &green);
+        else if(correct_position == p2)
+            gtk_widget_modify_fg(widget2, GTK_STATE_NORMAL, &green);
+        else if(correct_position == p3)
+            gtk_widget_modify_fg(widget3, GTK_STATE_NORMAL, &green);
+}
 
-// void choose_1()
-// {
-    // choose_position = 1;
-    // if(choose_position == correct_position)
-    //     gtk_widget_modify_fg(btn_vie1, GTK_STATE_NORMAL, &green);
-    // else {
-    //     gtk_widget_modify_fg(btn_vie1, GTK_STATE_NORMAL, &red);
-    //     // set_color_for_correct_answer(2, 3, 4, btn_vie2, btn_vie3, btn_vie4);
-    // }
+void choose_1()
+{
+    choose_position = 1;
+    if(choose_position == correct_position)
+        gtk_widget_modify_fg(btn_vie1, GTK_STATE_NORMAL, &green);
+    else {
+        gtk_widget_modify_fg(btn_vie1, GTK_STATE_NORMAL, &red);
+        // set_color_for_correct_answer(2, 3, 4, btn_vie2, btn_vie3, btn_vie4);
+    }
+    set_disable_button();
+    printf("%s\n", "1");
+}
+
+void choose2(){
+    choose_position = 2;
+    if(choose_position == correct_position)
+        gtk_widget_modify_fg(btn_vie2, GTK_STATE_NORMAL, &green);
+    else {
+        gtk_widget_modify_fg(btn_vie2, GTK_STATE_NORMAL, &red);
+        set_color_for_correct_answer(1, 3, 4, btn_vie1, btn_vie3, btn_vie4);
+    }
     // set_disable_button();
-    // printf("%s\n", "1");
-// }
+}
 
-// void choose2(){
-//     choose_position = 2;
-//     if(choose_position == correct_position)
-//         gtk_widget_modify_fg(btn_vie2, GTK_STATE_NORMAL, &green);
-//     else {
-//         gtk_widget_modify_fg(btn_vie2, GTK_STATE_NORMAL, &red);
-//         set_color_for_correct_answer(1, 3, 4, btn_vie1, btn_vie3, btn_vie4);
-//     }
-//     // set_disable_button();
-// }
+void choose3(){
+    choose_position = 3;
+    if(choose_position == correct_position)
+        gtk_widget_modify_fg(btn_vie3, GTK_STATE_NORMAL, &green);
+    else {
+        gtk_widget_modify_fg(btn_vie3, GTK_STATE_NORMAL, &red);
+        set_color_for_correct_answer(1, 2, 4, btn_vie1, btn_vie2, btn_vie4);
+    }
+    // set_disable_button();
+}
 
-// void choose3(){
-//     choose_position = 3;
-//     if(choose_position == correct_position)
-//         gtk_widget_modify_fg(btn_vie3, GTK_STATE_NORMAL, &green);
-//     else {
-//         gtk_widget_modify_fg(btn_vie3, GTK_STATE_NORMAL, &red);
-//         set_color_for_correct_answer(1, 2, 4, btn_vie1, btn_vie2, btn_vie4);
-//     }
-//     // set_disable_button();
-// }
-
-// void choose4(){
-//     choose_position = 4;
-//     if(choose_position == correct_position)
-//         gtk_widget_modify_fg(btn_vie4, GTK_STATE_NORMAL, &green);
-//     else {
-//         gtk_widget_modify_fg(btn_vie4, GTK_STATE_NORMAL, &red);
-//         set_color_for_correct_answer(1, 2, 3, btn_vie1, btn_vie2, btn_vie3);
-//     }
-//     // set_disable_button();
-// }
+void choose4(){
+    choose_position = 4;
+    if(choose_position == correct_position)
+        gtk_widget_modify_fg(btn_vie4, GTK_STATE_NORMAL, &green);
+    else {
+        gtk_widget_modify_fg(btn_vie4, GTK_STATE_NORMAL, &red);
+        set_color_for_correct_answer(1, 2, 3, btn_vie1, btn_vie2, btn_vie3);
+    }
+    // set_disable_button();
+}
 
 void exit_game()
 {

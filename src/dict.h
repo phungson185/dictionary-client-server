@@ -30,9 +30,9 @@ GtkEntry *log_acc, *log_pass, *reg_acc, *reg_pass, *retype_pass, *searchentry, *
 
 GtkWidget *reg_noti, *log_noti, *username, *textview1, *textview2, *textview3, *textview4, *textview_his;
 
-GtkWidget *lbl_eng, *lbl_count_question, *lbl_total_question, *lbl_count_correct;
+GObject *lbl_eng, *lbl_count_question, *lbl_total_question, *lbl_count_correct;
 
-GtkWidget *btn_vie1, *btn_vie2, *btn_vie3, *btn_vie4;
+GObject *btn_vie1, *btn_vie2, *btn_vie3, *btn_vie4;
 
 char htr[MAX];
 char buftrans[MAX];

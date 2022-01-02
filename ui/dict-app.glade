@@ -393,12 +393,12 @@ Phùng Đình Sơn		20184189
             <property name="receives_default">True</property>
             <property name="margin_left">10</property>
             <property name="margin_right">10</property>
-            <property name="margin_bottom">5</property>
+            <property name="margin_bottom">7</property>
           </object>
           <packing>
-            <property name="expand">True</property>
+            <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">4</property>
+            <property name="position">3</property>
           </packing>
         </child>
         <child>
@@ -409,12 +409,12 @@ Phùng Đình Sơn		20184189
             <property name="receives_default">True</property>
             <property name="margin_left">10</property>
             <property name="margin_right">10</property>
-            <property name="margin_bottom">5</property>
+            <property name="margin_bottom">7</property>
           </object>
           <packing>
-            <property name="expand">True</property>
+            <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">5</property>
+            <property name="position">4</property>
           </packing>
         </child>
         <child>
@@ -425,12 +425,12 @@ Phùng Đình Sơn		20184189
             <property name="receives_default">True</property>
             <property name="margin_left">10</property>
             <property name="margin_right">10</property>
-            <property name="margin_bottom">5</property>
+            <property name="margin_bottom">7</property>
           </object>
           <packing>
-            <property name="expand">True</property>
+            <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">6</property>
+            <property name="position">5</property>
           </packing>
         </child>
         <child>
@@ -441,12 +441,12 @@ Phùng Đình Sơn		20184189
             <property name="receives_default">True</property>
             <property name="margin_left">10</property>
             <property name="margin_right">10</property>
-            <property name="margin_bottom">5</property>
+            <property name="margin_bottom">10</property>
           </object>
           <packing>
-            <property name="expand">True</property>
+            <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">7</property>
+            <property name="position">6</property>
           </packing>
         </child>
         <child>
@@ -701,8 +701,8 @@ Phùng Đình Sơn		20184189
             <property name="receives_default">True</property>
             <property name="always_show_image">True</property>
             <signal name="clicked" handler="translate" swapped="no"/>
-            <accelerator key="Return" signal="clicked"/>
             <accelerator key="Return" signal="activate"/>
+            <accelerator key="Return" signal="clicked"/>
           </object>
           <packing>
             <property name="x">654</property>

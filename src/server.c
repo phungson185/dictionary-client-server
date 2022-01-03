@@ -489,7 +489,6 @@ void practice()
     int wrong_answer_id1 = 0, wrong_answer_id2 = 0, wrong_answer_id3 = 0;
     note = make_jrb();
     user_note = btopn(make_note_path(username), 0, 0);
-
     // scan user note to make note tree
     btpos(user_note, ZSTART);
     while (!btseln(user_note, eng, vie, MAX, &rsize))

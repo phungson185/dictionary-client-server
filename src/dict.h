@@ -12,13 +12,14 @@
 #include <btree.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define MAXLINE 4096   /*max text line length*/
 #define SERV_PORT 3000 /*port*/
 #define MAX 1000
 
 GtkBuilder *builder;
-GtkWidget *window_login, *window_register, *window_main, *window_advanced, *window_note, *window_about, *window_note;
+GtkWidget *window_login, *window_register, *window_main, *window_advanced, *window_note, *window_about, *window_practice, *window_game;
 GtkEntryCompletion *comple;
 
 GtkListStore *list;
@@ -28,13 +29,18 @@ GtkEntry *log_acc, *log_pass, *reg_acc, *reg_pass, *retype_pass, *searchentry, *
 
 GtkWidget *reg_noti, *log_noti, *username, *textview1, *textview2, *textview3, *textview4, *textview_his;
 
+GtkWidget *lbl_eng, *lbl_count_question, *lbl_total_question, *lbl_count_correct, *lbl_vie1, *lbl_vie2, *lbl_vie3, *lbl_vie4;
+
+GtkWidget *btn_vie1, *btn_vie2, *btn_vie3, *btn_vie4;
+
 char htr[MAX];
 char buftrans[MAX];
 int sockfd;
-char key[MAX]; 
-char info1[MAX]; 
+char key[MAX];
+char info1[MAX];
 char info2[MAX];
 char recv_info[MAX];
+char recv_question[MAXLINE];
 char user[MAX];
 
 GdkColor red;

@@ -5,7 +5,7 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <signal.h>
-
+#include <time.h>
 #include <jrb.h>
 #include <jval.h>
 #include <btree.h>
@@ -20,14 +20,17 @@ int connfd;
 char username[MAX];
 char suggest_protocol_str[MAX];
 char get_note_protol_str[MAX];
-
+char practice_protocol_str[MAXLINE];
+char start_practice_protocol_str[MAXLINE];
+int *note_id_arr;
 char key[MAX];
 char info1[MAX];
 char info2[MAX];
+int note_size = 0;
+int next_question = 0;
 
 char recv_info[MAX];
 char his[MAX];
-
 
 FILE *f;
 
@@ -35,6 +38,7 @@ BTA *user;
 BTA *dict;
 BTA *user_dict;
 BTA *user_note;
+JRB note = NULL;
 
 void sig_chld(int signo)
 {
@@ -102,6 +106,15 @@ char *make_note_path(char *username)
     strcat(path, "_note.bt");
     return path;
 }
+char *make_game_his_path(char *username)
+{
+    char *path = (char *)malloc(sizeof(char) * MAX);
+    strcpy(path, "../db/userGameHis/");
+    strcat(path, username);
+    strcat(path, "_gameHis.txt");
+    return path;
+}
+
 char *make_his_path(char *username)
 {
     char *path = (char *)malloc(sizeof(char) * MAX);
@@ -125,14 +138,14 @@ void registerr()
             if ((user_dict = btcrt(make_dict_path(info1), 0, 0)) == NULL)
             {
                 perror("Lỗi không thể tạo file từ điển cá nhân");
-                return -1;
+                return;
             }
             if ((user_note = btcrt(make_note_path(info1), 0, 0)) == NULL)
             {
                 perror("Lỗi không thể tạo file note");
-                return -1;
+                return;
             }
-            if (fclose(fopen(make_his_path(info1), "w")) !=0)
+            if (fclose(fopen(make_his_path(info1), "w")) != 0)
             {
                 perror("Lỗi không thể tạo file note");
                 return -1;
@@ -253,22 +266,25 @@ void get_history()
         strcpy(his, buffer);
     }
     strcat(his, "\n");
-    if (strlen(his) == 0 )
+    if (strlen(his) == 0)
         make_protocol("NOKE", "Không tìm thấy lich su tra cuu");
     else
         make_protocol("OKE", his);
     fclose(f);
 }
-void del_his(){
+void del_his()
+{
     int i;
-    if(( i= fclose(fopen(make_his_path(username), "w"))) !=0)
+    if ((i = fclose(fopen(make_his_path(username), "w"))) != 0)
     {
-    send(connfd,"NOKE",MAX,0);
+        send(connfd, "NOKE", MAX, 0);
     }
-    else  send(connfd,"OKE",MAX,0);
-    strcpy(his,"");
+    else
+        send(connfd, "OKE", MAX, 0);
+    strcpy(his, "");
 }
-void new_history_handle(char* text){
+void new_history_handle(char *text)
+{
     char *buffer = (char *)malloc(sizeof(char) * MAX);
     char *buftrans = (char *)malloc(sizeof(char) * MAX);
     sprintf(buftrans, "%s\n", text);
@@ -280,10 +296,11 @@ void new_history_handle(char* text){
     free(buffer);
     if (i == 0)
         add_to_history(text);
-    else  rewrite_history();
+    else
+        rewrite_history();
 }
-void rewrite_history(){
-
+void rewrite_history()
+{
 }
 int strremove(char *str, char *sub)
 {
@@ -332,10 +349,10 @@ void translate()
     if (strlen(edited_mean) == 0 && strlen(origin_mean) == 0)
         make_protocol("NOKE", "Không tìm thấy từ");
     else
-        {
-            make_protocol_two_msgs("VIE", edited_mean, origin_mean);
-            new_history_handle(info1);
-        }
+    {
+        make_protocol_two_msgs("VIE", edited_mean, origin_mean);
+        new_history_handle(info1);
+    }
 
     free(value);
     free(edited_mean);
@@ -473,7 +490,8 @@ void del_all_note()
 {
     if ((user_note = btcrt(make_note_path(info1), 0, 0)) == NULL)
         make_protocol("NOKE", "Xóa tất cả ghi chú thất bại");
-    else make_protocol("OKE", NULL);
+    else
+        make_protocol("OKE", NULL);
     btcls(user_note);
 }
 
@@ -500,7 +518,158 @@ void get_note()
     btcls(user_note);
 }
 
+void swap(int *a, int *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
 
+void printArray(int arr[], int n)
+{
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+}
+
+void randomize(int arr[], int n)
+{
+    srand(time(NULL));
+
+    for (int i = n - 1; i > 0; i--)
+    {
+        int j = rand() % (i + 1);
+        swap(&arr[i], &arr[j]);
+    }
+}
+
+typedef struct
+{
+    char *eng;
+    char *vie;
+} word;
+
+word *make_word(char *eng, char *vie)
+{
+    word *w = (word *)malloc(sizeof(word));
+    w->eng = strdup(eng);
+    w->vie = strdup(vie);
+    return w;
+}
+
+char *convert_int_to_string(int i)
+{
+    char *str = (char *)malloc(sizeof(char) * MAX);
+    sprintf(str, "%d", i);
+    return str;
+}
+
+void protocol_str_cat(char *str)
+{
+    strcat(practice_protocol_str, "|");
+    strcat(practice_protocol_str, str);
+}
+
+void free_id_word()
+{
+    JRB ptr;
+    jrb_traverse(ptr, note)
+    {
+        word *w = (word *)ptr->val.v;
+        free(w->eng);
+        free(w->vie);
+        free(w);
+    }
+    jrb_free_tree(note);
+}
+
+void wrong_word_str_cat(int wrong_word_id)
+{
+    strcat(practice_protocol_str, "|");
+    word *wd = (word *)(jrb_find_int(note, wrong_word_id)->val.v);
+    strcat(practice_protocol_str, wd->vie);
+}
+void practice()
+{
+    note_size = next_question = 0;
+    strcpy(start_practice_protocol_str, "OKE");
+    char *eng = (char *)malloc(sizeof(char) * MAX);
+    char *vie = (char *)malloc(sizeof(char) * MAX);
+    int rsize = 0;
+    int correct_answer_position;
+    int wrong_answer_id1 = 0, wrong_answer_id2 = 0, wrong_answer_id3 = 0;
+    note = make_jrb();
+    user_note = btopn(make_note_path(username), 0, 0);
+    // scan user note to make note tree
+    btpos(user_note, ZSTART);
+
+    while (!btseln(user_note, eng, vie, MAX, &rsize))
+    {
+        jrb_insert_int(note, note_size, (Jval){.v = make_word(eng, vie)});
+        note_size++;
+    }
+
+    if (note_size < 4)
+        make_protocol("NOKE", "Danh sách từ ghi chú cần có 4 từ trở lên!");
+    else
+    {
+        // insert note size to protocol
+        strcat(start_practice_protocol_str, "|");
+        strcat(start_practice_protocol_str, convert_int_to_string(note_size));
+        send(connfd, start_practice_protocol_str, MAX, 0);
+    }
+
+    note_id_arr = (int *)malloc(sizeof(int) * note_size);
+    for (int i = 0; i < note_size; i++)
+        note_id_arr[i] = i;
+    randomize(note_id_arr, note_size);
+
+    free(eng);
+    free(vie);
+    btcls(user_note);
+}
+void new_question()
+{
+    strcpy(practice_protocol_str, "OKE");
+    char *eng = (char *)malloc(sizeof(char) * MAX);
+    char *vie = (char *)malloc(sizeof(char) * MAX);
+    // int rsize, note_size = 0;
+    int correct_answer_position;
+    int wrong_answer_id1 = 0, wrong_answer_id2 = 0, wrong_answer_id3 = 0;
+
+    // get word of question
+    word *w = (word *)(jrb_find_int(note, note_id_arr[next_question])->val.v);
+
+    // insert correct answer and position to protocol
+    protocol_str_cat(w->eng);
+    protocol_str_cat(convert_int_to_string(1 + rand() % 4));
+    protocol_str_cat(w->vie);
+
+    // generate wrong answer id
+    srand(time(NULL));
+    wrong_answer_id1 = wrong_answer_id2 = wrong_answer_id3 = note_id_arr[next_question];
+    while (wrong_answer_id1 == note_id_arr[next_question])
+        wrong_answer_id1 = rand() % note_size;
+    while (wrong_answer_id2 == note_id_arr[next_question] || wrong_answer_id2 == wrong_answer_id1)
+        wrong_answer_id2 = rand() % note_size;
+    while (wrong_answer_id3 == note_id_arr[next_question] || wrong_answer_id3 == wrong_answer_id1 || wrong_answer_id3 == wrong_answer_id2)
+        wrong_answer_id3 = rand() % note_size;
+
+    // insert wrong answer to protocol
+    wrong_word_str_cat(wrong_answer_id1);
+    wrong_word_str_cat(wrong_answer_id2);
+    wrong_word_str_cat(wrong_answer_id3);
+    send(connfd, practice_protocol_str, MAX, 0);
+    next_question++;
+    free(eng);
+    free(vie);
+}
+void exit_game()
+{
+    free(note_id_arr);
+    free_id_word(note);
+    send(connfd, "OKE", MAX, 0);
+}
 int main(int argc, char **argv)
 {
     int listenfd, n;
@@ -546,7 +715,7 @@ int main(int argc, char **argv)
             //close listening socket
             close(listenfd);
 
-            while ((n = recv(connfd, recv_info, MAXLINE, 0)) > 0)
+            while ((n = recv(connfd, recv_info, MAX, 0)) > 0)
             {
                 printf("%s", "String received from client: ");
                 puts(recv_info);
@@ -573,6 +742,12 @@ int main(int argc, char **argv)
                     get_note();
                 else if (strcmp("DANOTE", key) == 0)
                     del_all_note();
+                else if (strcmp("PRAC", key) == 0)
+                    practice();
+                else if (strcmp("NEWQ", key) == 0)
+                    new_question();
+                else if (strcmp("EXIT", key) == 0)
+                    exit_game();
                 else if (strcmp("SHIS", key) == 0)
                     get_history();
                 else if (strcmp("DHIS", key) == 0)

@@ -48,6 +48,7 @@ void translate();
 void delay(int number_of_seconds);
 void make_protocol(char *k, char *i1, char *i2);
 void show_main_window();
+void get_history();
 
 int main_handler(int argc, char **argv);
 

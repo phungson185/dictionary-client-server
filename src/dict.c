@@ -166,6 +166,7 @@ void show_main_window()
     gtk_widget_show(window_main);
     gtk_widget_hide(window_login);
 
+    get_history();
     g_signal_connect(searchentry, "key_press_event", G_CALLBACK(on_key_press), NULL);
     g_signal_connect(window_main, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 }
@@ -259,16 +260,60 @@ void translate()
                 gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, edited_mean, -1, "red_fg", NULL);
                 gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, origin_mean, -1, "blue_fg", NULL);
             }
+            strcpy(info1, "");
+            // get_history();
+            add_to_history(gettext);
+            set_mean_textview_text(textview_his, htr);
         }
     }
     free(edited_mean);
     free(origin_mean);
+}
+void add_to_history(char *str)
+{
+    char *buffer = (char *)malloc(sizeof(char) * MAX);
+    char *buftrans = (char *)malloc(sizeof(char) * MAX);
+    sprintf(buftrans, "%s\n", str);
+    int i = strremove(htr, buftrans);
+    strcpy(buffer, buftrans);
+    strcat(buffer, htr);
+    strcpy(htr, buffer);
+    free(buffer);
+}
+int strremove(char *str, char *sub)
+{
+    size_t len = strlen(sub);
+    if (len > 0)
+    {
+        char *p = str;
+        if ((p = strstr(p, sub)) != NULL)
+        {
+            memmove(p, p + len, strlen(p + len) + 1);
+            return 1;
+        }
+    }
+    return 0;
 }
 
 void clear_history()
 {
     strcpy(htr, "");
     set_mean_textview_text(textview_his, htr);
+    send(sockfd, "DHIS", MAX, 0);
+    recv(sockfd, recv_info, MAX, 0);
+    printf("String received from server: ");
+    puts(recv_info);
+    char *str = strdup(recv_info);
+    if (strcmp(str, "OKE") == 0)
+    {
+        strcpy(htr, "");
+        set_mean_textview_text(textview_his, htr);
+        show_message(window_main, GTK_MESSAGE_INFO, "SUCCESS!", "Xóa lịch sử tra cứu thành công");
+    }
+    else
+    {
+        show_message(window_main, GTK_MESSAGE_ERROR, "ERROR", "Xóa lịch sửa tra cứu thất bại");
+    }
 }
 
 void extend()
@@ -295,6 +340,17 @@ void extend()
 
     g_object_unref(builder);
     gtk_widget_show(window_advanced);
+}
+void get_history()
+{
+    make_protocol("SHIS", user, NULL);
+    if (strcmp(key, "NOKE") == 0)
+        printf("%s", info1);
+    else if (strcmp(key, "OKE") == 0)
+    {
+        strcpy(htr, info1);
+        set_mean_textview_text(textview_his, htr);
+    }
 }
 
 void add_to_dict()

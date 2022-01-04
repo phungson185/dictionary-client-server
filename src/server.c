@@ -26,6 +26,10 @@ char info1[MAX];
 char info2[MAX];
 
 char recv_info[MAX];
+char his[MAX];
+
+
+FILE *f;
 
 BTA *user;
 BTA *dict;
@@ -98,6 +102,14 @@ char *make_note_path(char *username)
     strcat(path, "_note.bt");
     return path;
 }
+char *make_his_path(char *username)
+{
+    char *path = (char *)malloc(sizeof(char) * MAX);
+    strcpy(path, "../db/userHis/");
+    strcat(path, username);
+    strcat(path, "_his.txt");
+    return path;
+}
 
 void registerr()
 {
@@ -116,6 +128,11 @@ void registerr()
                 return -1;
             }
             if ((user_note = btcrt(make_note_path(info1), 0, 0)) == NULL)
+            {
+                perror("Lỗi không thể tạo file note");
+                return -1;
+            }
+            if (fclose(fopen(make_his_path(info1), "w")) !=0)
             {
                 perror("Lỗi không thể tạo file note");
                 return -1;
@@ -219,6 +236,81 @@ void suggestion()
     btcls(dict);
     btcls(user_dict);
 }
+void get_history()
+{
+    char buffer[MAX];
+    char line[MAX];
+    if ((f = fopen(make_his_path(username), "r")) == NULL)
+    {
+        printf("Lỗi không thể mở file.\n");
+        return -1;
+    }
+    while (fgets(line, MAX, f))
+    {
+        memset(buffer, 0, 4);
+        strcpy(buffer, line);
+        strcat(buffer, his);
+        strcpy(his, buffer);
+    }
+    strcat(his, "\n");
+    if (strlen(his) == 0 )
+        make_protocol("NOKE", "Không tìm thấy lich su tra cuu");
+    else
+        make_protocol("OKE", his);
+    fclose(f);
+}
+void del_his(){
+    int i;
+    if(( i= fclose(fopen(make_his_path(username), "w"))) !=0)
+    {
+    send(connfd,"NOKE",MAX,0);
+    }
+    else  send(connfd,"OKE",MAX,0);
+    strcpy(his,"");
+}
+void new_history_handle(char* text){
+    char *buffer = (char *)malloc(sizeof(char) * MAX);
+    char *buftrans = (char *)malloc(sizeof(char) * MAX);
+    sprintf(buftrans, "%s\n", text);
+    printf("his: %s", his);
+    int i = strremove(his, buftrans);
+    strcpy(buffer, buftrans);
+    strcat(buffer, his);
+    strcpy(his, buffer);
+    free(buffer);
+    if (i == 0)
+        add_to_history(text);
+    else  rewrite_history();
+}
+void rewrite_history(){
+
+}
+int strremove(char *str, char *sub)
+{
+    size_t len = strlen(sub);
+    if (len > 0)
+    {
+        char *p = str;
+        if ((p = strstr(p, sub)) != NULL)
+        {
+            memmove(p, p + len, strlen(p + len) + 1);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void add_to_history(char *buf)
+{
+    char line[MAX];
+    if ((f = fopen(make_his_path(username), "a")) == NULL)
+    {
+        printf("Lỗi không thể mở file.\n");
+        return -1;
+    }
+    fprintf(f, "%s\n", buf);
+    fclose(f);
+}
 
 void translate()
 {
@@ -240,7 +332,11 @@ void translate()
     if (strlen(edited_mean) == 0 && strlen(origin_mean) == 0)
         make_protocol("NOKE", "Không tìm thấy từ");
     else
-        make_protocol_two_msgs("VIE", edited_mean, origin_mean);
+        {
+            make_protocol_two_msgs("VIE", edited_mean, origin_mean);
+            new_history_handle(info1);
+        }
+
     free(value);
     free(edited_mean);
     free(origin_mean);
@@ -404,6 +500,7 @@ void get_note()
     btcls(user_note);
 }
 
+
 int main(int argc, char **argv)
 {
     int listenfd, n;
@@ -476,6 +573,10 @@ int main(int argc, char **argv)
                     get_note();
                 else if (strcmp("DANOTE", key) == 0)
                     del_all_note();
+                else if (strcmp("SHIS", key) == 0)
+                    get_history();
+                else if (strcmp("DHIS", key) == 0)
+                    del_his();
             }
 
             if (n < 0)

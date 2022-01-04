@@ -490,6 +490,7 @@ void wrong_word_str_cat(int wrong_word_id)
     strcat(practice_protocol_str, wd->vie);
 }
 void practice(){
+    note_size= next_question=0;
     strcpy(start_practice_protocol_str, "OKE");
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
@@ -559,14 +560,14 @@ void new_question()
     wrong_word_str_cat(wrong_answer_id3);
     send(connfd, practice_protocol_str, MAX, 0);
     next_question++;
-    // if(next_question==note_size){
-        // free(note_id_arr);
-        // free_id_word();
-    // }
     free(eng);
     free(vie);
 }
-
+void exit_game(){
+    free(note_id_arr);
+    free_id_word(note);
+    send(connfd, "OKE", MAX, 0);
+}
 int main(int argc, char **argv)
 {
     int listenfd, n;
@@ -643,6 +644,8 @@ int main(int argc, char **argv)
                     practice();
                 else if (strcmp("NEWQ", key) == 0)
                     new_question();
+                else if (strcmp("EXIT", key) == 0)
+                    exit_game();
             }
 
             if (n < 0)

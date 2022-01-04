@@ -545,10 +545,10 @@ void create_question(char *question_str)
         break;
     }
 
-    // free(vie1);
-    // free(vie2);
-    // free(vie3);
-    // free(vie4);
+    free(vie1);
+    free(vie2);
+    free(vie3);
+    free(vie4);
 }
 void new_record_result_of_game()
 {
@@ -644,9 +644,6 @@ void new_question()
         return;
     }
     game_result.total++;
-    // test
-    // set_lbl_info_game();
-    // return;
 
     create_question(strdup(str));
 }
@@ -737,6 +734,10 @@ void exit_game()
     show_message(window_main, GTK_MESSAGE_INFO, "KẾT THÚC", end_info);
     free(end_info);
     save_record_result_of_game();
+    send(sockfd, "EXIT", MAX, 0);
+    recv(sockfd, recv_info, MAX, 0);
+    printf("String received from server: ");
+    puts(recv_info);
 }
 
 void about()

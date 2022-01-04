@@ -266,7 +266,40 @@ void del_his(){
     send(connfd,"NOKE",MAX,0);
     }
     else  send(connfd,"OKE",MAX,0);
+    strcpy(his,"");
 }
+void new_history_handle(char* text){
+    char *buffer = (char *)malloc(sizeof(char) * MAX);
+    char *buftrans = (char *)malloc(sizeof(char) * MAX);
+    sprintf(buftrans, "%s\n", text);
+    printf("his: %s", his);
+    int i = strremove(his, buftrans);
+    strcpy(buffer, buftrans);
+    strcat(buffer, his);
+    strcpy(his, buffer);
+    free(buffer);
+    if (i == 0)
+        add_to_history(text);
+    else  rewrite_history();
+}
+void rewrite_history(){
+
+}
+int strremove(char *str, char *sub)
+{
+    size_t len = strlen(sub);
+    if (len > 0)
+    {
+        char *p = str;
+        if ((p = strstr(p, sub)) != NULL)
+        {
+            memmove(p, p + len, strlen(p + len) + 1);
+            return 1;
+        }
+    }
+    return 0;
+}
+
 void add_to_history(char *buf)
 {
     char line[MAX];
@@ -301,7 +334,7 @@ void translate()
     else
         {
             make_protocol_two_msgs("VIE", edited_mean, origin_mean);
-             add_to_history(info1);
+            new_history_handle(info1);
         }
 
     free(value);

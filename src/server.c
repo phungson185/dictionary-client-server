@@ -514,7 +514,7 @@ void practice(){
         // insert note size to protocol
         strcat(start_practice_protocol_str, "|");
         strcat(start_practice_protocol_str, convert_int_to_string(note_size));
-        send(connfd, start_practice_protocol_str, MAXLINE, 0);
+        send(connfd, start_practice_protocol_str, MAX, 0);
     }
 
     note_id_arr = (int *)malloc(sizeof(int) * note_size);
@@ -557,7 +557,7 @@ void new_question()
     wrong_word_str_cat(wrong_answer_id1);
     wrong_word_str_cat(wrong_answer_id2);
     wrong_word_str_cat(wrong_answer_id3);
-    send(connfd, practice_protocol_str, MAXLINE, 0);
+    send(connfd, practice_protocol_str, MAX, 0);
     next_question++;
     // if(next_question==note_size){
         // free(note_id_arr);
@@ -612,7 +612,7 @@ int main(int argc, char **argv)
             //close listening socket
             close(listenfd);
 
-            while ((n = recv(connfd, recv_info, MAXLINE, 0)) > 0)
+            while ((n = recv(connfd, recv_info, MAX, 0)) > 0)
             {
                 printf("%s", "String received from client: ");
                 puts(recv_info);

@@ -3,8 +3,8 @@ char *spliting_str;
 int count_question = 0;
 int correct_position = 0;
 int choose_position = 0;
-char recv_start[MAXLINE];
-int game_size=0;
+char recv_start[MAX];
+int game_size = 0;
 typedef struct game_result
 {
     int total;
@@ -489,11 +489,12 @@ void set_answers(char *vie1, char *vie2, char *vie3, char *vie4)
     gtk_button_set_label(GTK_BUTTON(btn_vie3), vie3);
     gtk_button_set_label(GTK_BUTTON(btn_vie4), vie4);
 }
-void set_lbl_info_game(){
+void set_lbl_info_game()
+{
     char *str = (char *)malloc(sizeof(char) * 10);
     sprintf(str, "%d", game_result.total);
     gtk_label_set_text(lbl_count_question, str);
-    
+
     sprintf(str, "%d", game_result.correct_num);
     gtk_label_set_text(lbl_count_correct, str);
 }
@@ -503,10 +504,10 @@ void create_question(char *question_str)
     set_lbl_info_game();
     char *q = strdup(question_str);
     char *e;
-    char *vie1 = (char *)malloc(sizeof(char) * 100);
-    char *vie2 = (char *)malloc(sizeof(char) * 100);
-    char *vie3 = (char *)malloc(sizeof(char) * 100);
-    char *vie4 = (char *)malloc(sizeof(char) * 100);
+    char *vie1 = (char *)malloc(sizeof(char) * MAX);
+    char *vie2 = (char *)malloc(sizeof(char) * MAX);
+    char *vie3 = (char *)malloc(sizeof(char) * MAX);
+    char *vie4 = (char *)malloc(sizeof(char) * MAX);
 
     // count_question++;
     // gtk_label_set_text(GTK_LABEL(lbl_count_question), convert_int_to_string(count_question));
@@ -544,12 +545,10 @@ void create_question(char *question_str)
         break;
     }
 
-    free(vie1);
-    free(vie2);
-    free(vie3);
-    free(vie4);
-
-
+    // free(vie1);
+    // free(vie2);
+    // free(vie3);
+    // free(vie4);
 }
 void new_record_result_of_game()
 {
@@ -576,10 +575,10 @@ void save_record_result_of_game()
     // fclose(f);
 }
 
-void start ()
+void start()
 {
     send(sockfd, "PRAC", MAX, 0);
-    recv(sockfd, recv_start, MAXLINE, 0);
+    recv(sockfd, recv_start, MAX, 0);
     puts(recv_start);
 
     char *str = strdup(recv_start);
@@ -610,11 +609,12 @@ void start ()
 
     new_record_result_of_game();
     char *total;
-    if ((total = strsep(&str, "|")) != NULL){
+    if ((total = strsep(&str, "|")) != NULL)
+    {
         gtk_label_set_text(GTK_LABEL(lbl_total_question), total);
-        game_size= atoi(total);
+        game_size = atoi(total);
     }
-    
+
     new_question();
 
     gtk_builder_connect_signals(builder, NULL);
@@ -622,14 +622,20 @@ void start ()
     gtk_widget_show(window_game);
     gtk_widget_destroy(window_practice);
 }
-void new_question(){
+void new_question()
+{
     reset_color_of_button();
-     
-    if(game_result.total == game_size){ exit_game(); return;}
+
+    if (game_result.total == game_size)
+    {
+        exit_game();
+        return;
+    }
+
     send(sockfd, "NEWQ", MAX, 0);
-    recv(sockfd, recv_question, MAXLINE, 0);
-    puts(recv_question);
-    char *str = strdup(recv_question);
+    recv(sockfd, recv_info, MAX, 0);
+    puts(recv_info);
+    char *str = strdup(recv_info);
     strcpy(key, strsep(&str, "|"));
     if (strcmp(key, "NOKE") == 0)
     {
@@ -639,11 +645,10 @@ void new_question(){
     }
     game_result.total++;
     // test
-    set_lbl_info_game();
-    return;
-       
-    // create_question(strdup(str));
+    // set_lbl_info_game();
+    // return;
 
+    create_question(strdup(str));
 }
 
 void set_disable_button(bool b)
@@ -653,7 +658,8 @@ void set_disable_button(bool b)
     gtk_widget_set_sensitive(GTK_WIDGET(btn_vie3), !b);
     gtk_widget_set_sensitive(GTK_WIDGET(btn_vie4), !b);
 }
-void reset_color_of_button(){
+void reset_color_of_button()
+{
     set_disable_button(FALSE);
     gtk_widget_modify_fg(btn_vie1, GTK_STATE_NORMAL, NULL);
     gtk_widget_modify_fg(btn_vie2, GTK_STATE_NORMAL, NULL);
@@ -663,45 +669,53 @@ void reset_color_of_button(){
 void set_color_for_correct_answer()
 {
     set_lbl_info_game();
-    if(correct_position == 1)
-            gtk_widget_modify_fg(btn_vie1, GTK_STATE_NORMAL, &green);
-        else if(correct_position == 2)
-            gtk_widget_modify_fg(btn_vie2, GTK_STATE_NORMAL, &green);
-        else if(correct_position == 3)
-            gtk_widget_modify_fg(btn_vie3, GTK_STATE_NORMAL, &green);
-        else if(correct_position == 4)
-            gtk_widget_modify_fg(btn_vie4, GTK_STATE_NORMAL, &green);
+    if (correct_position == 1)
+        gtk_widget_modify_fg(btn_vie1, GTK_STATE_NORMAL, &green);
+    else if (correct_position == 2)
+        gtk_widget_modify_fg(btn_vie2, GTK_STATE_NORMAL, &green);
+    else if (correct_position == 3)
+        gtk_widget_modify_fg(btn_vie3, GTK_STATE_NORMAL, &green);
+    else if (correct_position == 4)
+        gtk_widget_modify_fg(btn_vie4, GTK_STATE_NORMAL, &green);
 }
 
 void choose_1()
 {
     choose_position = 1;
-    if(choose_position != correct_position) gtk_widget_modify_fg(btn_vie1, GTK_STATE_NORMAL, &red);
-    else game_result.correct_num++;
+    if (choose_position != correct_position)
+        gtk_widget_modify_fg(btn_vie1, GTK_STATE_NORMAL, &red);
+    else
+        game_result.correct_num++;
     //set_disable_button(TRUE);
     set_color_for_correct_answer();
 }
 void choose_2()
 {
     choose_position = 2;
-    if(choose_position != correct_position) gtk_widget_modify_fg(btn_vie2, GTK_STATE_NORMAL, &red);
-    else game_result.correct_num++;
+    if (choose_position != correct_position)
+        gtk_widget_modify_fg(btn_vie2, GTK_STATE_NORMAL, &red);
+    else
+        game_result.correct_num++;
     //set_disable_button(TRUE);
     set_color_for_correct_answer();
 }
 void choose_3()
 {
     choose_position = 3;
-    if(choose_position != correct_position) gtk_widget_modify_fg(btn_vie3, GTK_STATE_NORMAL, &red);
-    else game_result.correct_num++;
+    if (choose_position != correct_position)
+        gtk_widget_modify_fg(btn_vie3, GTK_STATE_NORMAL, &red);
+    else
+        game_result.correct_num++;
     //set_disable_button(TRUE);
     set_color_for_correct_answer();
 }
 void choose_4()
 {
     choose_position = 4;
-    if(choose_position != correct_position) gtk_widget_modify_fg(btn_vie4, GTK_STATE_NORMAL, &red);
-    else game_result.correct_num++;
+    if (choose_position != correct_position)
+        gtk_widget_modify_fg(btn_vie4, GTK_STATE_NORMAL, &red);
+    else
+        game_result.correct_num++;
     //set_disable_button(TRUE);
     set_color_for_correct_answer();
 }

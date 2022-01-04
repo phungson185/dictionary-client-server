@@ -3,11 +3,11 @@ char *spliting_str;
 int count_question = 0;
 int correct_position = 0;
 int choose_position = 0;
-long game_size=0;
-
+char recv_start[MAXLINE];
+int game_size=0;
 typedef struct game_result
 {
-    long total;
+    int total;
     int correct_num;
 };
 struct game_result game_result;
@@ -498,12 +498,9 @@ void set_lbl_info_game(){
     gtk_label_set_text(lbl_count_correct, str);
 }
 
-char *split_question_str(char *question_str)
+void create_question(char *question_str)
 {
-    game_result.total++;
-
     set_lbl_info_game();
-
     char *q = strdup(question_str);
     char *e;
     char *vie1 = (char *)malloc(sizeof(char) * 100);
@@ -552,7 +549,7 @@ char *split_question_str(char *question_str)
     free(vie3);
     free(vie4);
 
-    return q;
+
 }
 void new_record_result_of_game()
 {
@@ -582,13 +579,11 @@ void save_record_result_of_game()
 void start ()
 {
     send(sockfd, "PRAC", MAX, 0);
-    recv(sockfd, recv_question, MAXLINE, 0);
-    puts(recv_question);
+    recv(sockfd, recv_start, MAXLINE, 0);
+    puts(recv_start);
 
-    char *str = strdup(recv_question);
+    char *str = strdup(recv_start);
     strcpy(key, strsep(&str, "|"));
-    printf("gmae size: %s\n",str);
-    game_size= atoi(str);
     if (strcmp(key, "NOKE") == 0)
     {
         show_message(window_game, GTK_MESSAGE_ERROR, "ERROR!", strsep(&str, "|"));
@@ -615,30 +610,40 @@ void start ()
 
     new_record_result_of_game();
     char *total;
-    if ((total = strsep(&str, "|")) != NULL)
+    if ((total = strsep(&str, "|")) != NULL){
         gtk_label_set_text(GTK_LABEL(lbl_total_question), total);
-
+        game_size= atoi(total);
+    }
     
-    spliting_str = split_question_str(str);
+    new_question();
 
     gtk_builder_connect_signals(builder, NULL);
     g_object_unref(builder);
     gtk_widget_show(window_game);
     gtk_widget_destroy(window_practice);
 }
-
-void next()
-{
+void new_question(){
     reset_color_of_button();
-    if (spliting_str == NULL)
-        {
-            printf("%s\n", "END");
-            exit_game();
-            return;
-        }
-    
-    
-    spliting_str = split_question_str(spliting_str);
+     
+    if(game_result.total == game_size){ exit_game(); return;}
+    send(sockfd, "NEWQ", MAX, 0);
+    recv(sockfd, recv_question, MAXLINE, 0);
+    puts(recv_question);
+    char *str = strdup(recv_question);
+    strcpy(key, strsep(&str, "|"));
+    if (strcmp(key, "NOKE") == 0)
+    {
+        show_message(window_game, GTK_MESSAGE_ERROR, "ERROR!", strsep(&str, "|"));
+        gtk_widget_destroy(window_practice);
+        return;
+    }
+    game_result.total++;
+    // test
+    set_lbl_info_game();
+    return;
+       
+    // create_question(strdup(str));
+
 }
 
 void set_disable_button(bool b)

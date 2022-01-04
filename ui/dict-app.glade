@@ -456,7 +456,7 @@ Phùng Đình Sơn		20184189
                 <property name="valign">end</property>
                 <property name="margin-left">311</property>
                 <property name="margin-bottom">7</property>
-                <signal name="clicked" handler="next" swapped="no"/>
+                <signal name="clicked" handler="new_question" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>

@@ -259,6 +259,14 @@ void get_history()
         make_protocol("OKE", his);
     fclose(f);
 }
+void del_his(){
+    int i;
+    if(( i= fclose(fopen(make_his_path(username), "w"))) !=0)
+    {
+    send(connfd,"NOKE",MAX,0);
+    }
+    else  send(connfd,"OKE",MAX,0);
+}
 void add_to_history(char *buf)
 {
     char line[MAX];
@@ -534,6 +542,8 @@ int main(int argc, char **argv)
                     del_all_note();
                 else if (strcmp("SHIS", key) == 0)
                     get_history();
+                else if (strcmp("DHIS", key) == 0)
+                    del_his();
             }
 
             if (n < 0)

@@ -261,17 +261,57 @@ void translate()
                 gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, origin_mean, -1, "blue_fg", NULL);
             }
             strcpy(info1,"");
-            get_history();
+            // get_history();
+            add_to_history(gettext);
+            set_mean_textview_text(textview_his, htr);
         }
     }
     free(edited_mean);
     free(origin_mean);
+}
+void add_to_history(char* str){
+    char *buffer = (char *)malloc(sizeof(char) * MAX);
+    char *buftrans = (char *)malloc(sizeof(char) * MAX);
+    sprintf(buftrans, "%s\n", str);
+    int i = strremove(htr, buftrans);
+    strcpy(buffer, buftrans);
+    strcat(buffer, htr);
+    strcpy(htr, buffer);
+    free(buffer);
+}
+int strremove(char *str, char *sub)
+{
+    size_t len = strlen(sub);
+    if (len > 0)
+    {
+        char *p = str;
+        if ((p = strstr(p, sub)) != NULL)
+        {
+            memmove(p, p + len, strlen(p + len) + 1);
+            return 1;
+        }
+    }
+    return 0;
 }
 
 void clear_history()
 {
     strcpy(htr, "");
     set_mean_textview_text(textview_his, htr);
+    send(sockfd, "DHIS", MAX, 0);
+    recv(sockfd, recv_info, MAX, 0);
+    printf("String received from server: ");
+    puts(recv_info);
+    char *str = strdup(recv_info);
+    if (strcmp(str,"OKE")==0){
+    strcpy(htr, "");
+    set_mean_textview_text(textview_his, htr);
+    show_message(window_main,GTK_MESSAGE_INFO,"SUCCESS!", "Xoa lich su tra cuu thanh cong");
+    }
+    else {
+        show_message(window_main,GTK_MESSAGE_ERROR,"ERROR", "Xoa lich su loi");
+    }
+    
 }
 
 void extend()
@@ -303,13 +343,11 @@ void get_history(){
         make_protocol("SHIS",user,NULL);
         if (strcmp(key, "NOKE") == 0)
         printf("%s", info1);
-            // show_message(window_advanced, GTK_MESSAGE_ERROR, "ERROR!", info1);
         else if (strcmp(key, "OKE") == 0)
         {
-            printf("%s", info1);
-        set_mean_textview_text(textview_his, info1);
+        strcpy(htr,info1);
+        set_mean_textview_text(textview_his, htr);
         }
-            // show_message(window_advanced, GTK_MESSAGE_INFO, "SUCCESS!", "Thêm từ thành công");
 }
 
 void add_to_dict()

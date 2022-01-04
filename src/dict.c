@@ -15,7 +15,7 @@ int main_handler(int argc, char **argv)
     log_acc = GTK_WIDGET(gtk_builder_get_object(builder, "log_acc"));
     log_pass = GTK_WIDGET(gtk_builder_get_object(builder, "log_pass"));
     log_noti = GTK_WIDGET(gtk_builder_get_object(builder, "log_noti"));
-    
+
     g_signal_connect(window_login, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
     g_object_unref(builder);
@@ -260,7 +260,7 @@ void translate()
                 gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, edited_mean, -1, "red_fg", NULL);
                 gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, origin_mean, -1, "blue_fg", NULL);
             }
-            strcpy(info1,"");
+            strcpy(info1, "");
             // get_history();
             add_to_history(gettext);
             set_mean_textview_text(textview_his, htr);
@@ -269,7 +269,8 @@ void translate()
     free(edited_mean);
     free(origin_mean);
 }
-void add_to_history(char* str){
+void add_to_history(char *str)
+{
     char *buffer = (char *)malloc(sizeof(char) * MAX);
     char *buftrans = (char *)malloc(sizeof(char) * MAX);
     sprintf(buftrans, "%s\n", str);
@@ -303,15 +304,16 @@ void clear_history()
     printf("String received from server: ");
     puts(recv_info);
     char *str = strdup(recv_info);
-    if (strcmp(str,"OKE")==0){
-    strcpy(htr, "");
-    set_mean_textview_text(textview_his, htr);
-    show_message(window_main,GTK_MESSAGE_INFO,"SUCCESS!", "Xoa lich su tra cuu thanh cong");
+    if (strcmp(str, "OKE") == 0)
+    {
+        strcpy(htr, "");
+        set_mean_textview_text(textview_his, htr);
+        show_message(window_main, GTK_MESSAGE_INFO, "SUCCESS!", "Xóa lịch sử tra cứu thành công");
     }
-    else {
-        show_message(window_main,GTK_MESSAGE_ERROR,"ERROR", "Xoa lich su loi");
+    else
+    {
+        show_message(window_main, GTK_MESSAGE_ERROR, "ERROR", "Xóa lịch sửa tra cứu thất bại");
     }
-    
 }
 
 void extend()
@@ -339,15 +341,16 @@ void extend()
     g_object_unref(builder);
     gtk_widget_show(window_advanced);
 }
-void get_history(){
-        make_protocol("SHIS",user,NULL);
-        if (strcmp(key, "NOKE") == 0)
+void get_history()
+{
+    make_protocol("SHIS", user, NULL);
+    if (strcmp(key, "NOKE") == 0)
         printf("%s", info1);
-        else if (strcmp(key, "OKE") == 0)
-        {
-        strcpy(htr,info1);
+    else if (strcmp(key, "OKE") == 0)
+    {
+        strcpy(htr, info1);
         set_mean_textview_text(textview_his, htr);
-        }
+    }
 }
 
 void add_to_dict()

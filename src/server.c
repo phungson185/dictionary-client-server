@@ -26,10 +26,13 @@ int *note_id_arr;
 char key[MAX];
 char info1[MAX];
 char info2[MAX];
-int note_size=0;
-int next_question=0;
+int note_size = 0;
+int next_question = 0;
 
 char recv_info[MAX];
+char his[MAX];
+
+FILE *f;
 
 BTA *user;
 BTA *dict;
@@ -112,6 +115,15 @@ char *make_game_his_path(char *username)
     return path;
 }
 
+char *make_his_path(char *username)
+{
+    char *path = (char *)malloc(sizeof(char) * MAX);
+    strcpy(path, "../db/userHis/");
+    strcat(path, username);
+    strcat(path, "_his.txt");
+    return path;
+}
+
 void registerr()
 {
     int rsize;
@@ -132,6 +144,11 @@ void registerr()
             {
                 perror("Lỗi không thể tạo file note");
                 return;
+            }
+            if (fclose(fopen(make_his_path(info1), "w")) != 0)
+            {
+                perror("Lỗi không thể tạo file note");
+                return -1;
             }
             make_protocol("OKE", NULL);
         }
@@ -232,6 +249,85 @@ void suggestion()
     btcls(dict);
     btcls(user_dict);
 }
+void get_history()
+{
+    char buffer[MAX];
+    char line[MAX];
+    if ((f = fopen(make_his_path(username), "r")) == NULL)
+    {
+        printf("Lỗi không thể mở file.\n");
+        return -1;
+    }
+    while (fgets(line, MAX, f))
+    {
+        memset(buffer, 0, 4);
+        strcpy(buffer, line);
+        strcat(buffer, his);
+        strcpy(his, buffer);
+    }
+    strcat(his, "\n");
+    if (strlen(his) == 0)
+        make_protocol("NOKE", "Không tìm thấy lich su tra cuu");
+    else
+        make_protocol("OKE", his);
+    fclose(f);
+}
+void del_his()
+{
+    int i;
+    if ((i = fclose(fopen(make_his_path(username), "w"))) != 0)
+    {
+        send(connfd, "NOKE", MAX, 0);
+    }
+    else
+        send(connfd, "OKE", MAX, 0);
+    strcpy(his, "");
+}
+void new_history_handle(char *text)
+{
+    char *buffer = (char *)malloc(sizeof(char) * MAX);
+    char *buftrans = (char *)malloc(sizeof(char) * MAX);
+    sprintf(buftrans, "%s\n", text);
+    printf("his: %s", his);
+    int i = strremove(his, buftrans);
+    strcpy(buffer, buftrans);
+    strcat(buffer, his);
+    strcpy(his, buffer);
+    free(buffer);
+    if (i == 0)
+        add_to_history(text);
+    else
+        rewrite_history();
+}
+void rewrite_history()
+{
+}
+int strremove(char *str, char *sub)
+{
+    size_t len = strlen(sub);
+    if (len > 0)
+    {
+        char *p = str;
+        if ((p = strstr(p, sub)) != NULL)
+        {
+            memmove(p, p + len, strlen(p + len) + 1);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void add_to_history(char *buf)
+{
+    char line[MAX];
+    if ((f = fopen(make_his_path(username), "a")) == NULL)
+    {
+        printf("Lỗi không thể mở file.\n");
+        return -1;
+    }
+    fprintf(f, "%s\n", buf);
+    fclose(f);
+}
 
 void translate()
 {
@@ -253,7 +349,11 @@ void translate()
     if (strlen(edited_mean) == 0 && strlen(origin_mean) == 0)
         make_protocol("NOKE", "Không tìm thấy từ");
     else
+    {
         make_protocol_two_msgs("VIE", edited_mean, origin_mean);
+        new_history_handle(info1);
+    }
+
     free(value);
     free(edited_mean);
     free(origin_mean);
@@ -489,8 +589,9 @@ void wrong_word_str_cat(int wrong_word_id)
     word *wd = (word *)(jrb_find_int(note, wrong_word_id)->val.v);
     strcat(practice_protocol_str, wd->vie);
 }
-void practice(){
-    note_size= next_question=0;
+void practice()
+{
+    note_size = next_question = 0;
     strcpy(start_practice_protocol_str, "OKE");
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
@@ -501,7 +602,7 @@ void practice(){
     user_note = btopn(make_note_path(username), 0, 0);
     // scan user note to make note tree
     btpos(user_note, ZSTART);
-    
+
     while (!btseln(user_note, eng, vie, MAX, &rsize))
     {
         jrb_insert_int(note, note_size, (Jval){.v = make_word(eng, vie)});
@@ -535,10 +636,10 @@ void new_question()
     // int rsize, note_size = 0;
     int correct_answer_position;
     int wrong_answer_id1 = 0, wrong_answer_id2 = 0, wrong_answer_id3 = 0;
-    
+
     // get word of question
     word *w = (word *)(jrb_find_int(note, note_id_arr[next_question])->val.v);
-    
+
     // insert correct answer and position to protocol
     protocol_str_cat(w->eng);
     protocol_str_cat(convert_int_to_string(1 + rand() % 4));
@@ -563,7 +664,8 @@ void new_question()
     free(eng);
     free(vie);
 }
-void exit_game(){
+void exit_game()
+{
     free(note_id_arr);
     free_id_word(note);
     send(connfd, "OKE", MAX, 0);
@@ -646,6 +748,10 @@ int main(int argc, char **argv)
                     new_question();
                 else if (strcmp("EXIT", key) == 0)
                     exit_game();
+                else if (strcmp("SHIS", key) == 0)
+                    get_history();
+                else if (strcmp("DHIS", key) == 0)
+                    del_his();
             }
 
             if (n < 0)

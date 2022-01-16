@@ -142,12 +142,17 @@ void registerr()
             }
             if ((user_note = btcrt(make_note_path(info1), 0, 0)) == NULL)
             {
-                perror("Lỗi không thể tạo file note");
+                perror("Lỗi không thể tạo file ghi chú");
                 return;
             }
             if (fclose(fopen(make_his_path(info1), "w")) != 0)
             {
-                perror("Lỗi không thể tạo file note");
+                perror("Lỗi không thể tạo file lịch sử tra cứu");
+                return -1;
+            }
+            if (fclose(fopen(make_game_his_path(info1), "w")) != 0)
+            {
+                perror("Lỗi không thể tạo file lịch sử luyện tập");
                 return -1;
             }
             make_protocol("OKE", NULL);
@@ -267,7 +272,7 @@ void get_history()
     }
     strcat(his, "\n");
     if (strlen(his) == 0)
-        make_protocol("NOKE", "Không tìm thấy lich su tra cuu");
+        make_protocol("NOKE", "Không tìm thấy lịch sử tra cứu");
     else
         make_protocol("OKE", his);
     fclose(f);
@@ -669,11 +674,57 @@ void new_question()
     free(eng);
     free(vie);
 }
+void save_record_result_of_game(long correct_num, long num_of_ques)
+{
+    FILE *f;
+    char end_time[30];
+    char *buf = (char *)malloc(sizeof(char) * MAX);
+
+    if ((f = fopen(make_game_his_path(username), "a")) == NULL)
+    {
+        printf("Lỗi không thể mở file.\n");
+        return -1;
+    }
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    strcpy(end_time, asctime(tm));
+    end_time[strlen(end_time) - 1] = '\0';
+    sprintf(buf, "%s\t%ld\t%ld", end_time, correct_num, num_of_ques);
+    fprintf(f, "%s\n", buf);
+    fclose(f);
+}
 void exit_game()
 {
     free(note_id_arr);
     free_id_word(note);
+    save_record_result_of_game(atoi(info1),atoi(info2));
     send(connfd, "OKE", MAX, 0);
+}
+void get_game_his(){
+    char buffer[MAX];
+    char line[MAX];
+    if ((f = fopen(make_game_his_path(username), "r")) == NULL)
+    {
+        printf("Lỗi không thể mở file.\n");
+        return -1;
+    }
+    strcat(buffer,"OKE|");
+    while (fgets(line, MAX, f))
+    {
+        strcat(buffer, line);
+    }
+    fclose(f);
+    send(connfd, buffer, MAX, 0);
+}
+void del_game_his()
+{
+    int i;
+    if ((i = fclose(fopen(make_game_his_path(username), "w"))) != 0)
+    {
+        send(connfd, "NOKE", MAX, 0);
+    }
+    else
+        send(connfd, "OKE", MAX, 0);
 }
 int main(int argc, char **argv)
 {
@@ -757,6 +808,10 @@ int main(int argc, char **argv)
                     get_history();
                 else if (strcmp("DHIS", key) == 0)
                     del_his();
+                else if (strcmp("GGHIS", key) == 0)
+                    get_game_his();
+                else if (strcmp("DGHIS", key) == 0)
+                    del_game_his();
             }
 
             if (n < 0)

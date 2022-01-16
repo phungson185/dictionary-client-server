@@ -324,7 +324,7 @@ void clear_history()
     }
     else
     {
-        show_message(window_main, GTK_MESSAGE_ERROR, "ERROR", "Xóa lịch sửa tra cứu thất bại");
+        show_message(window_main, GTK_MESSAGE_ERROR, "ERROR", "Xóa lịch lịch sử tra cứu thất bại");
     }
 }
 
@@ -529,6 +529,7 @@ void practice()
     gtk_builder_connect_signals(builder, NULL);
     textview3 = GTK_WIDGET(gtk_builder_get_object(builder, "textview3"));
     g_object_unref(builder);
+    show_game_his();
     gtk_widget_show(window_practice);
 }
 
@@ -611,25 +612,6 @@ void new_record_result_of_game()
 {
     game_result.total = 0;
     game_result.correct_num = 0;
-}
-void save_record_result_of_game()
-{
-    // FILE *f;
-    // char end_time[30];
-    // char *buf = (char *)malloc(sizeof(char) * MAX);
-
-    // if ((f = fopen(game_history_path, "a")) == NULL)
-    // {
-    //     printf("Lỗi không thể mở file.\n");
-    //     return -1;
-    // }
-    // time_t t = time(NULL);
-    // struct tm *tm = localtime(&t);
-    // strcpy(end_time, asctime(tm));
-    // end_time[strlen(end_time) - 1] = '\0';
-    // sprintf(buf, "%s-%ld-%ld", end_time, game_result.correct_num, num_of_ques);
-    // fprintf(f, "%s\n", buf);
-    // fclose(f);
 }
 
 void start()
@@ -792,13 +774,39 @@ void exit_game()
     strcat(end_info, "Số câu đúng: ");
     strcat(end_info, make_long_to_string(game_result.correct_num));
     strcat(end_info, "/");
-    strcat(end_info, make_long_to_string(game_size));
+    strcat(end_info, make_long_to_string(game_result.total));
     show_message(window_main, GTK_MESSAGE_INFO, "KẾT THÚC", end_info);
     free(end_info);
-    save_record_result_of_game();
-    send(sockfd, "EXIT", MAX, 0);
+    make_protocol("EXIT", make_long_to_string(game_result.correct_num), make_long_to_string(game_result.total));
+    printf("String received from server: ");
+    puts(recv_info);
+}
+void show_game_his(){
+
+    char line[MAX];
+
+    send(sockfd, "GGHIS", MAX, 0);
     recv(sockfd, recv_info, MAX, 0);
     printf("String received from server: ");
+    puts(recv_info);
+    char *r = strdup(recv_info);
+    strcpy(key, strsep(&r, "|"));
+    // if(strcpy(key,"OKE"))
+    printf("key: %s \n", key);
+    printf("r: %s \n", r);
+    set_mean_textview_text(textview3, r);
+}
+void del_game_his(){
+    send(sockfd, "DGHIS", MAX, 0);
+    recv(sockfd, recv_info, MAX, 0);
+    printf("String received from server: ");
+    puts(recv_info);
+    char *str = strdup(recv_info);
+    if (strcmp(str, "OKE") == 0)
+    {
+        set_mean_textview_text(textview3, "");
+    }
+    else show_message(window_practice,GTK_MESSAGE_ERROR, "ERROR", "Xóa lịch sử luyện tập thất bại");
 }
 
 void about()

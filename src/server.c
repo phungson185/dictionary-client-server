@@ -417,18 +417,23 @@ void del_dict()
 {
     char *value = (char *)malloc(sizeof(char) * MAX);
     int rsize;
+    note = btopn(make_note_path(username), 0, 0);
     user_dict = btopn(make_dict_path(username), 0, 0);
     btpos(user_dict, ZSTART);
     if (!btsel(user_dict, info1, value, MAX, &rsize))
     {
         if (!btdel(user_dict, info1))
+        {
+            if (!btsel(note, info1, value, MAX, &rsize))
+                btdel(note, info1);
             make_protocol("OKE", NULL);
+        }
         else
             make_protocol("NOKE", "Xóa từ thất bại");
     }
     else
         make_protocol("NOKE", "Từ bạn muốn xóa không có trong từ điển");
-
+    btcls(note);
     free(value);
     btcls(user_dict);
 }

@@ -452,6 +452,7 @@ void delete_from_note()
 
 void note()
 {
+    gtk_widget_destroy(window_note);
     GtkBuilder *builder;
 
     builder = gtk_builder_new_from_file("../ui/dict-app.glade");

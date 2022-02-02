@@ -1,21 +1,21 @@
-#ifndef __DICT_H__
-#define __DICT_H__
+#ifndef _CLIENT_H_
+#define _CLIENT_H_
 
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-#include <jrb.h>
-#include <jval.h>
 #include <string.h>
-#include <btree.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define MAXLINE 4096   /*max text line length*/
-#define SERV_PORT 3000 /*port*/
+#define MAXLINE 4096 
+#define SERV_PORT 3000 
 #define MAX 1000
 
 GtkBuilder *builder;
@@ -46,15 +46,18 @@ char user[MAX];
 GdkColor red;
 GdkColor green;
 
-void datainit();
-void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data);
-void set_mean_textview_text(GtkWidget *textview, char *text);
-void set_label_empty_text(GtkWidget *widget);
-void translate();
-void delay(int number_of_seconds);
-void make_protocol(char *k, char *i1, char *i2);
-void show_main_window();
-void get_history();
+char *spliting_str;
+static long count_question = 0;
+static int correct_position = 0;
+static int choose_position = 0;
+char recv_start[MAX];
+static long game_size = 0;
+typedef struct game_result
+{
+    long total;
+    long correct_num;
+};
+struct game_result game_result;
 
 int main_handler(int argc, char **argv);
 

@@ -1,11 +1,5 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <string.h>
-
-#include "dict.h"
+#include "client/client.h"
+#include "client/main_controller.h"
 
 int main(int argc, char **argv)
 {

@@ -220,6 +220,122 @@ Phùng Đình Sơn		20184189
       </object>
     </child>
   </object>
+  <object class="GtkWindow" id="window_change_pass">
+    <property name="width_request">444</property>
+    <property name="height_request">254</property>
+    <property name="can_focus">False</property>
+    <property name="title" translatable="yes">Đổi mật khẩu</property>
+    <child type="titlebar">
+      <placeholder/>
+    </child>
+    <child>
+      <object class="GtkFixed">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <child>
+          <object class="GtkEntry" id="old_pass">
+            <property name="width_request">225</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+          </object>
+          <packing>
+            <property name="x">172</property>
+            <property name="y">30</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="width_request">100</property>
+            <property name="height_request">34</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Mật khẩu cũ</property>
+          </object>
+          <packing>
+            <property name="x">62</property>
+            <property name="y">30</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEntry" id="new_pass">
+            <property name="width_request">225</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="input_purpose">password</property>
+          </object>
+          <packing>
+            <property name="x">172</property>
+            <property name="y">84</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="width_request">77</property>
+            <property name="height_request">34</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Mật khẩu mới</property>
+          </object>
+          <packing>
+            <property name="x">62</property>
+            <property name="y">84</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton">
+            <property name="label" translatable="yes">Đổi mật khẩu</property>
+            <property name="width_request">141</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="xalign">1</property>
+            <signal name="clicked" handler="exec_change_pass" swapped="no"/>
+            <accelerator key="Return" signal="activate"/>
+          </object>
+          <packing>
+            <property name="x">254</property>
+            <property name="y">201</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEntry" id="retype_new_pass">
+            <property name="width_request">225</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="input_purpose">password</property>
+          </object>
+          <packing>
+            <property name="x">172</property>
+            <property name="y">140</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="width_request">100</property>
+            <property name="height_request">34</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Nhập lại mật khẩu</property>
+          </object>
+          <packing>
+            <property name="x">30</property>
+            <property name="y">141</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-justify-fill</property>
+          </object>
+          <packing>
+            <property name="x">265</property>
+            <property name="y">210</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkWindow" id="window_game">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Quick Test</property>
@@ -537,6 +653,7 @@ Phùng Đình Sơn		20184189
     <property name="height_request">250</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Từ điển Anh - Việt</property>
+    <property name="icon">art_logo.jpg</property>
     <child type="titlebar">
       <placeholder/>
     </child>
@@ -694,7 +811,6 @@ Phùng Đình Sơn		20184189
   </object>
   <object class="GtkWindow" id="window_main">
     <property name="width_request">862</property>
-    <property name="height_request">0</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Từ điển Anh - Việt</property>
     <property name="default_width">439</property>
@@ -879,6 +995,8 @@ Phùng Đình Sơn		20184189
                 <property name="can_focus">True</property>
                 <property name="editable">False</property>
                 <property name="wrap_mode">word</property>
+                <property name="left_margin">7</property>
+                <property name="top_margin">3</property>
               </object>
             </child>
           </object>
@@ -1020,6 +1138,28 @@ Phùng Đình Sơn		20184189
           </packing>
         </child>
         <child>
+          <object class="GtkButton">
+            <property name="width_request">114</property>
+            <property name="height_request">22</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="xalign">0.34999999403953552</property>
+            <signal name="clicked" handler="open_profile" swapped="no"/>
+            <child>
+              <object class="GtkLabel" id="username">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">89</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="x">16</property>
+            <property name="y">365</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkImage">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
@@ -1027,26 +1167,8 @@ Phùng Đình Sơn		20184189
             <property name="icon_size">3</property>
           </object>
           <packing>
-            <property name="x">15</property>
+            <property name="x">21</property>
             <property name="y">370</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel" id="username">
-            <property name="width_request">201</property>
-            <property name="height_request">24</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes">lhjhjhkjhkhkjh</property>
-            <property name="justify">right</property>
-            <property name="ellipsize">end</property>
-            <property name="max_width_chars">1</property>
-            <property name="track_visited_links">False</property>
-            <property name="xalign">0</property>
-          </object>
-          <packing>
-            <property name="x">41</property>
-            <property name="y">371</property>
           </packing>
         </child>
       </object>
@@ -1201,6 +1323,91 @@ Phùng Đình Sơn		20184189
       </object>
     </child>
   </object>
+  <object class="GtkWindow" id="window_profile">
+    <property name="can_focus">False</property>
+    <property name="title" translatable="yes">Thông tin</property>
+    <property name="resizable">False</property>
+    <property name="default_width">225</property>
+    <property name="default_height">176</property>
+    <child type="titlebar">
+      <placeholder/>
+    </child>
+    <child>
+      <object class="GtkFixed">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <child>
+          <object class="GtkBox">
+            <property name="width_request">153</property>
+            <property name="height_request">80</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">29</property>
+            <child>
+              <object class="GtkButton">
+                <property name="label" translatable="yes">Đổi mật khẩu</property>
+                <property name="height_request">44</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="xalign">0.92000001668930054</property>
+                <signal name="clicked" handler="change_pass" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton">
+                <property name="label" translatable="yes">Đăng xuất</property>
+                <property name="height_request">44</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="logout" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="x">36</property>
+            <property name="y">32</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-edit</property>
+            <property name="icon_size">3</property>
+          </object>
+          <packing>
+            <property name="x">45</property>
+            <property name="y">42</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-close</property>
+            <property name="icon_size">3</property>
+          </object>
+          <packing>
+            <property name="x">45</property>
+            <property name="y">116</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkWindow" id="window_register">
     <property name="width_request">13</property>
     <property name="height_request">327</property>
@@ -1285,6 +1492,7 @@ Phùng Đình Sơn		20184189
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="xalign">0.70999997854232788</property>
             <signal name="clicked" handler="registerr" swapped="no"/>
             <accelerator key="Return" signal="activate"/>
           </object>

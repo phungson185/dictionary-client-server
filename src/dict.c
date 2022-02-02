@@ -800,15 +800,64 @@ void exit_game()
     printf("String received from server: ");
 }
 
-void about()
-{
+void open_profile() {
     GtkBuilder *builder;
 
-    builder = gtk_builder_new_from_file("../src/dict-app.glade");
+    builder = gtk_builder_new_from_file("../ui/dict-app.glade");
 
-    window_about = GTK_WIDGET(gtk_builder_get_object(builder, "window_about"));
+    window_profile = GTK_WIDGET(gtk_builder_get_object(builder, "window_profile"));
     gtk_builder_connect_signals(builder, NULL);
 
     g_object_unref(builder);
-    gtk_widget_show(window_about);
+    gtk_widget_show(window_profile);
+}
+
+void change_pass() {
+    gtk_widget_destroy(window_profile);
+
+    GtkBuilder *builder;
+
+    builder = gtk_builder_new_from_file("../ui/dict-app.glade");
+
+    window_change_pass = GTK_WIDGET(gtk_builder_get_object(builder, "window_change_pass"));
+    gtk_builder_connect_signals(builder, NULL);
+
+    old_pass = GTK_WIDGET(gtk_builder_get_object(builder, "old_pass"));
+    new_pass = GTK_WIDGET(gtk_builder_get_object(builder, "new_pass"));
+    retype_new_pass = GTK_WIDGET(gtk_builder_get_object(builder, "retype_new_pass"));
+    change_pass_notif = GTK_WIDGET(gtk_builder_get_object(builder, "change_pass_notif"));
+
+    g_object_unref(builder);
+    gtk_widget_show(window_change_pass);
+}
+
+void exec_change_pass(){
+    char *repass = (char *)malloc(sizeof(char) * MAX);
+    strcpy(info1, gtk_entry_get_text(GTK_ENTRY(old_pass)));
+    strcpy(info2, gtk_entry_get_text(GTK_ENTRY(new_pass)));
+    strcpy(repass, gtk_entry_get_text(GTK_ENTRY(retype_new_pass)));
+
+    if (strcmp(info1, "") == 0 || strcmp(info2, "") == 0 || strcmp(repass, "") == 0)
+        show_message(window_change_pass, GTK_MESSAGE_ERROR, "ERROR!", "Thông tin đổi mật khẩu còn thiếu");
+    else if (strcmp(info2, repass) != 0)
+        show_message(window_change_pass, GTK_MESSAGE_ERROR, "ERROR!", "Mật khẩu không khớp");
+    else
+    {
+        make_protocol("CPASS", info1, info2);
+        if (strcmp(key, "OKE") == 0)
+        {
+            show_message(window_change_pass, GTK_MESSAGE_INFO, "SUCCESS!", "Đổi mật khẩu thành công");
+            gtk_widget_destroy(window_change_pass);
+            gtk_widget_show(window_main);
+        }
+        else if (strcmp(key, "NOKE") == 0)
+            show_message(window_change_pass, GTK_MESSAGE_ERROR, "ERROR!", info1);
+    }
+    free(repass);
+}
+
+void logout() {
+    gtk_widget_destroy(window_profile);
+    gtk_widget_hide(window_main);
+    gtk_widget_show(window_login);
 }

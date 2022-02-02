@@ -15,19 +15,20 @@
 #include <stdbool.h>
 
 #define MAXLINE 4096   /*max text line length*/
-#define SERV_PORT 3000 /*port*/
+#define SERV_PORT 8080 /*port*/
 #define MAX 1000
 
 GtkBuilder *builder;
-GtkWidget *window_login, *window_register, *window_main, *window_advanced, *window_note, *window_about, *window_practice, *window_game;
+GtkWidget *window_login, *window_register, *window_main, *window_advanced, *window_note, *window_about, *window_practice, *window_game, *window_profile, *window_change_pass;
+
 GtkEntryCompletion *comple;
 
 GtkListStore *list;
 GtkTreeIter suggestion_iter;
 
-GtkEntry *log_acc, *log_pass, *reg_acc, *reg_pass, *retype_pass, *searchentry, *entry_newword, *entry_meanword, *entry_del;
+GtkEntry *log_acc, *log_pass, *reg_acc, *reg_pass, *retype_pass, *searchentry, *entry_newword, *entry_meanword, *entry_del, *old_pass, *new_pass, *retype_new_pass;
 
-GtkWidget *reg_noti, *log_noti, *username, *textview1, *textview2, *textview3, *textview4, *textview_his;
+GtkWidget *reg_noti, *log_noti, *username, *textview1, *textview2, *textview3, *textview4, *textview_his, *change_pass_notif;
 
 GtkWidget *lbl_eng, *lbl_count_question, *lbl_total_question, *lbl_count_correct, *lbl_vie1, *lbl_vie2, *lbl_vie3, *lbl_vie4;
 
@@ -55,6 +56,7 @@ void delay(int number_of_seconds);
 void make_protocol(char *k, char *i1, char *i2);
 void show_main_window();
 void get_history();
+void login();
 
 int main_handler(int argc, char **argv);
 

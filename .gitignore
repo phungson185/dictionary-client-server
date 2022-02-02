@@ -1,7 +1,5 @@
 .vscode
 
-build
-
 db/dict.bt
 db/user.bt
 db/userDict/*.bt

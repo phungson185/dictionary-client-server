@@ -1,4 +1,10 @@
 .vscode
 
+build
+
 db/dict.bt
 db/user.bt
+db/userDict/*.bt
+db/userHis/*.txt
+db/userNote/*.bt 
+db/userGameHis/*.txt

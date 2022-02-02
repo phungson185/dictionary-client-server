@@ -19,13 +19,13 @@
 #define MAX 1000
 
 GtkBuilder *builder;
-GtkWidget *window_login, *window_register, *window_main, *window_advanced, *window_note, *window_about, *window_practice, *window_game;
+GtkWidget *window_login, *window_register, *window_main, *window_advanced, *window_note, *window_about, *window_practice, *window_game, *window_profile, *window_change_pass;
 GtkEntryCompletion *comple;
 
 GtkListStore *list;
 GtkTreeIter suggestion_iter;
 
-GtkEntry *log_acc, *log_pass, *reg_acc, *reg_pass, *retype_pass, *searchentry, *entry_newword, *entry_meanword, *entry_del;
+GtkEntry *log_acc, *log_pass, *reg_acc, *reg_pass, *retype_pass, *searchentry, *entry_newword, *entry_meanword, *entry_del, *old_pass, *new_pass, *retype_new_pass;
 
 GtkWidget *reg_noti, *log_noti, *username, *textview1, *textview2, *textview3, *textview4, *textview_his;
 

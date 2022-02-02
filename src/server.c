@@ -293,7 +293,6 @@ void new_history_handle(char *text)
     char *buffer = (char *)malloc(sizeof(char) * MAX);
     char *buftrans = (char *)malloc(sizeof(char) * MAX);
     sprintf(buftrans, "%s\n", text);
-    printf("his: %s", his);
     int i = strremove(his, buftrans);
     strcpy(buffer, buftrans);
     strcat(buffer, his);
@@ -726,6 +725,28 @@ void del_game_his()
     else
         send(connfd, "OKE", MAX, 0);
 }
+
+void change_pass() {
+    char *pass = (char *)malloc(sizeof(char) * MAX);
+    int rsize;
+    user = btopn("../db/user.bt", 0, 0);
+    btpos(user, ZSTART);
+
+    if (btsel(user, username, pass, MAX, &rsize))
+        make_protocol("NOKE", "Tài khoản không tồn tại");
+    else
+    {
+        if (strcmp(pass, info1) != 0)
+            make_protocol("NOKE", "Mật khẩu không đúng");
+        else
+        {
+            btupd(user, username, info2, MAX);
+            make_protocol("OKE", NULL);
+        }
+    }
+    btcls(user);
+}
+
 int main(int argc, char **argv)
 {
     int listenfd, n;
@@ -743,7 +764,7 @@ int main(int argc, char **argv)
 
     //preparation of the socket address
     servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    servaddr.sin_addr.s_addr = inet_addr("192.168.1.106");
     servaddr.sin_port = htons(SERV_PORT);
 
     //bind the socket
@@ -812,6 +833,9 @@ int main(int argc, char **argv)
                     get_game_his();
                 else if (strcmp("DGHIS", key) == 0)
                     del_game_his();
+                else if (strcmp("CPASS", key) == 0)
+                    change_pass();
+                else printf("%s\n", "Wrong protocol");
             }
 
             if (n < 0)

@@ -28,6 +28,7 @@ void make_protocol(char *k, char *i1, char *i2)
         strcat(pr, "|");
         strcat(pr, i2);
     }
+    puts(pr);
     send(sockfd, pr, MAX, 0);
 
     recv(sockfd, recv_info, MAX, 0);

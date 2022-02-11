@@ -17,6 +17,7 @@ void practice()
 
     while (!btseln(user_note, eng, vie, MAX, &rsize))
     {
+        printf("%s-%s\n", eng, vie);
         jrb_insert_int(note, note_size, (Jval){.v = make_word(eng, vie)});
         note_size++;
     }
@@ -107,20 +108,6 @@ void exit_game()
 void get_game_his()
 {
     char buffer[MAX];
-    // char line[MAX];
-    // if ((f = fopen(make_game_his_path(username), "r")) == NULL)
-    // {
-    //     printf("Lỗi không thể mở file.\n");
-    //     return -1;
-    // }
-    // while (fgets(line, MAX, f))
-    // {
-    //     strcat(buffer, line);
-    // }
-    // fclose(f);
-    // puts(buffer);
-    // server_make_protocol("OKE", buffer);
-    
     FILE *fd;
     int ch;
     int count;
@@ -168,8 +155,16 @@ void get_game_his()
 void del_game_his()
 {
     int i;
-    if ((i = fclose(fopen(make_game_his_path(username), "w"))) != 0)
+    if ((i = fclose(fopen(make_game_his_path(info1), "w"))) != 0)
         server_make_protocol("NOKE", NULL);
     else
         server_make_protocol("OKE", NULL);
+}
+
+void add_game_word_to_note(){
+    
+}
+
+void delete_game_word_to_note(){
+    
 }

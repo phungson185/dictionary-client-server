@@ -1,4 +1,5 @@
 #include "client/practice_controller.h"
+#include "client/note_controller.h"
 
 void practice()
 {
@@ -276,11 +277,11 @@ void show_game_his()
     send(sockfd, "GGHIS", MAX, 0);
     recv(sockfd, recv_info, MAX, 0);
     char *str = strdup(recv_info);
-    char* e = strsep(&str, "|");
+    char *e = strsep(&str, "|");
 
     while ((e = strsep(&str, "|")) != NULL)
     {
-        strcpy(buf,e);
+        strcpy(buf, e);
         get_end_time = strtok(&buf, "-");
         get_correct_num = strtok(NULL, "-");
         get_game_tree_size = strtok(NULL, "-");
@@ -292,15 +293,37 @@ void show_game_his()
             gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, line, -1, "yellow_fg", NULL);
         else
             gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, line, -1, "green_fg", NULL);
-        puts(e);
     }
 }
 
 void del_game_his()
 {
-    make_protocol("DGHIS", NULL, NULL);
+    puts(user);
+    make_protocol("DGHIS", user, NULL);
     if (strcmp(key, "OKE") == 0)
         set_mean_textview_text(textview3, "Danh sách trống!");
     else
         show_message(window_practice, GTK_MESSAGE_ERROR, "ERROR", "Xóa lịch sử luyện tập thất bại");
+}
+
+void add_game_word_to_note()
+{
+    char str[50];
+    strcpy(str, gtk_label_get_text(GTK_LABEL(lbl_eng)));
+    make_protocol("ANOTE", str, NULL);
+    if (strcmp(key, "NOKE") == 0)
+        show_message(window_practice, GTK_MESSAGE_ERROR, "ERROR!", info1);
+    else if (strcmp(key, "OKE") == 0)
+        show_message(window_practice, GTK_MESSAGE_INFO, "SUCCESS!", "Thêm từ vào danh sách ghi chú thành công");
+}
+
+void delete_game_word_to_note()
+{
+    char str[50];
+    strcpy(str, gtk_label_get_text(GTK_LABEL(lbl_eng)));
+    make_protocol("DNOTE", str, NULL);
+    if (strcmp(key, "NOKE") == 0)
+        show_message(window_practice, GTK_MESSAGE_ERROR, "ERROR!", info1);
+    else if (strcmp(key, "OKE") == 0)
+        show_message(window_practice, GTK_MESSAGE_INFO, "SUCCESS!", "Xóa từ khỏi danh sách ghi chú thành công");
 }

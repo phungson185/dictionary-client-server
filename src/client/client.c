@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 
     memset(&servaddr, 0, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = inet_addr("192.168.1.106");
+    servaddr.sin_addr.s_addr = inet_addr("192.168.1.197");
     servaddr.sin_port = htons(SERV_PORT);
 
     if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0)

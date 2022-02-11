@@ -83,6 +83,7 @@ void note()
 void del_all_note()
 {
     make_protocol("DANOTE", user, NULL);
+
     if (strcmp(key, "NOKE") == 0)
         show_message(window_note, GTK_MESSAGE_ERROR, "ERROR!", info1);
     else if (strcmp(key, "OKE") == 0)

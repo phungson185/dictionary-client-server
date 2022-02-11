@@ -29,8 +29,17 @@ void edit_dict()
     int rsize;
     dict = btopn("../../../db/dict.bt", 0, 0);
     user_dict = btopn(make_dict_path(username), 0, 0);
+    user_note = btopn(make_note_path(username), 0, 0);
     if (!btsel(user_dict, info1, value, MAX, &rsize))
     {
+        if (!btsel(user_note, info1, value, MAX, &rsize))
+        {
+            if (!btupd(user_note, info1, info2, MAX))
+                server_make_protocol("OKE", NULL);
+            else
+                server_make_protocol("NOKE", "Sửa từ thất bại");
+        }
+        
         if (!btupd(user_dict, info1, info2, MAX))
             server_make_protocol("OKE", NULL);
         else
@@ -51,6 +60,7 @@ void edit_dict()
     free(value);
     btcls(dict);
     btcls(user_dict);
+    btcls(user_note);
 }
 
 void del_dict()

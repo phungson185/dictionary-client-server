@@ -7,7 +7,8 @@ int main(int argc, char **argv)
     pid_t childpid;
     socklen_t clilen;
     struct sockaddr_in cliaddr, servaddr;
-
+    char server_log[100] = "String received from client";
+    char tmp_log[100];
     if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
         perror("Problem in btreating the socket");
@@ -33,7 +34,7 @@ int main(int argc, char **argv)
         printf("%s\n", "Received request...");
 
         if ((childpid = fork()) == 0)
-        { 
+        {
 
             printf("%s\n", "Child created for dealing with client requests");
 
@@ -41,7 +42,8 @@ int main(int argc, char **argv)
 
             while ((n = recv(connfd, recv_info, MAX, 0)) > 0)
             {
-                printf("%s", "String received from client: ");
+                sprintf(tmp_log, "%s %s: ", server_log, username);
+                printf("%s", tmp_log);
                 puts(recv_info);
                 server_split_revc_info(recv_info);
                 if (strcmp("REG", key) == 0)
@@ -82,7 +84,10 @@ int main(int argc, char **argv)
                     del_game_his();
                 else if (strcmp("CPASS", key) == 0)
                     change_pass();
-                else printf("%s\n", "Wrong protocol");
+                else if (strcmp("LOGOUT", key) == 0)
+                    logout();
+                else
+                    printf("%s\n", "Wrong protocol");
             }
 
             if (n < 0)

@@ -22,7 +22,7 @@
 #define LISTENQ 8  
 
 int connfd;
-char username[MAX];
+char username[50];
 char suggest_protocol_str[MAX];
 char get_note_protol_str[MAX];
 char practice_protocol_str[MAXLINE];

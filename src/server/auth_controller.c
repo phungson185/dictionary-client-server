@@ -64,7 +64,8 @@ void login()
     btcls(user);
 }
 
-void change_pass() {
+void change_pass()
+{
     char *pass = (char *)malloc(sizeof(char) * MAX);
     int rsize;
     user = btopn("../../../db/user.bt", 0, 0);
@@ -83,4 +84,10 @@ void change_pass() {
         }
     }
     btcls(user);
+}
+
+void logout()
+{
+    strcpy(username, "");
+    server_make_protocol("OKE", NULL);
 }

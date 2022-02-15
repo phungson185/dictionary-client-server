@@ -148,7 +148,11 @@ void exec_change_pass()
 
 void logout()
 {
-    gtk_widget_destroy(window_profile);
-    gtk_widget_hide(window_main);
-    gtk_widget_show(window_login);
+    make_protocol("LOGOUT", NULL, NULL);
+    if (strcmp(key, "OKE") == 0)
+    {
+        gtk_widget_destroy(window_profile);
+        gtk_widget_hide(window_main);
+        gtk_widget_show(window_login);
+    }
 }

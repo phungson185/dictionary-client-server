@@ -884,8 +884,8 @@ Phùng Đình Sơn		20184189
             <property name="receives_default">True</property>
             <property name="always_show_image">True</property>
             <signal name="clicked" handler="translate" swapped="no"/>
-            <accelerator key="Return" signal="activate"/>
             <accelerator key="Return" signal="clicked"/>
+            <accelerator key="Return" signal="activate"/>
           </object>
           <packing>
             <property name="x">654</property>
@@ -1209,7 +1209,7 @@ Phùng Đình Sơn		20184189
     <property name="width_request">486</property>
     <property name="height_request">266</property>
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Danh sách từ khó </property>
+    <property name="title" translatable="yes">Danh sách từ ghi chú</property>
     <child type="titlebar">
       <placeholder/>
     </child>
@@ -1281,6 +1281,8 @@ Phùng Đình Sơn		20184189
       <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="margin_left">10</property>
+        <property name="margin_right">10</property>
         <property name="margin_top">10</property>
         <property name="margin_bottom">10</property>
         <property name="orientation">vertical</property>
@@ -1377,11 +1379,11 @@ Phùng Đình Sơn		20184189
             <property name="can_focus">False</property>
             <child>
               <object class="GtkButton">
-                <property name="label" translatable="yes">Xóa toàn bộ</property>
+                <property name="label" translatable="yes">Luyện tập</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="del_game_his" swapped="no"/>
+                <signal name="clicked" handler="start" swapped="no"/>
                 <style>
                   <class name="button"/>
                 </style>
@@ -1395,11 +1397,11 @@ Phùng Đình Sơn		20184189
             </child>
             <child>
               <object class="GtkButton">
-                <property name="label" translatable="yes">Luyện tập</property>
+                <property name="label" translatable="yes">Xóa toàn bộ</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="start" swapped="no"/>
+                <signal name="clicked" handler="del_game_his" swapped="no"/>
                 <style>
                   <class name="button"/>
                 </style>

@@ -9,12 +9,12 @@ int main(int argc, char **argv)
     struct sockaddr_in cliaddr, servaddr;
     char server_log[100] = "String received from client";
     char tmp_log[100];
+    
     if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
         perror("Problem in btreating the socket");
         exit(2);
     }
-
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = inet_addr("192.168.1.197");
     servaddr.sin_port = htons(SERV_PORT);

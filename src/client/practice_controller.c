@@ -274,7 +274,6 @@ void show_game_his()
     char line[100];
     char buf[50];
 
-    // make_protocol("GGHIS", NULL, NULL);
     send(sockfd, "GGHIS", MAX, 0);
     recv(sockfd, recv_info, MAX, 0);
     puts(recv_info);

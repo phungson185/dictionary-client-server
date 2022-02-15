@@ -9,7 +9,7 @@ int main(int argc, char **argv)
     struct sockaddr_in cliaddr, servaddr;
     char server_log[100] = "String received from client";
     char tmp_log[100];
-    
+
     if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
         perror("Problem in btreating the socket");
@@ -48,7 +48,7 @@ int main(int argc, char **argv)
                 server_split_revc_info(recv_info);
                 if (strcmp("REG", key) == 0)
                     registerr();
-                else if (strcmp("LOG", key) == 0)
+                else if (strcmp("LOGIN", key) == 0)
                     login();
                 else if (strcmp("SUG", key) == 0)
                     suggestion();

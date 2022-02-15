@@ -48,11 +48,12 @@ void registerr()
     strcpy(info1, gtk_entry_get_text(GTK_ENTRY(reg_acc)));
     strcpy(info2, gtk_entry_get_text(GTK_ENTRY(reg_pass)));
     strcpy(repass, gtk_entry_get_text(GTK_ENTRY(retype_pass)));
-
     if (strcmp(info1, "") == 0 || strcmp(info2, "") == 0 || strcmp(repass, "") == 0)
         show_message(window_register, GTK_MESSAGE_ERROR, "ERROR!", "Thông tin đăng ký còn thiếu");
     else if (strcmp(info2, repass) != 0)
         show_message(window_register, GTK_MESSAGE_ERROR, "ERROR!", "Mật khẩu không khớp");
+    else if (strlen(info2) < 6 || strlen(repass) < 6)
+        show_message(window_change_pass, GTK_MESSAGE_ERROR, "ERROR!", "Mật khẩu phải có ít nhất 6 ký tự");
     else
     {
         make_protocol("REG", info1, info2);
@@ -76,7 +77,7 @@ void login()
         show_message(window_login, GTK_MESSAGE_ERROR, "ERROR!", "Thông tin đăng nhập còn thiếu");
     else
     {
-        make_protocol("LOG", info1, info2);
+        make_protocol("LOGIN", info1, info2);
         if (strcmp(key, "OKE") == 0)
         {
             strcpy(user, info1);
@@ -131,6 +132,8 @@ void exec_change_pass()
         show_message(window_change_pass, GTK_MESSAGE_ERROR, "ERROR!", "Thông tin đổi mật khẩu còn thiếu");
     else if (strcmp(info2, repass) != 0)
         show_message(window_change_pass, GTK_MESSAGE_ERROR, "ERROR!", "Mật khẩu không khớp");
+    else if (strlen(info1) < 6 || strlen(info2) < 6 || strlen(repass) < 6)
+        show_message(window_change_pass, GTK_MESSAGE_ERROR, "ERROR!", "Mật khẩu phải có ít nhất 6 ký tự");
     else
     {
         make_protocol("CPASS", info1, info2);
@@ -148,7 +151,10 @@ void exec_change_pass()
 
 void logout()
 {
-    make_protocol("LOGOUT", NULL, NULL);
+    // make_protocol("LOGOUT", NULL, NULL);
+    send(sockfd, "LOGOUT", MAX, 0);
+    recv(sockfd, recv_info, MAX, 0);
+    puts(recv_info);
     if (strcmp(key, "OKE") == 0)
     {
         gtk_widget_destroy(window_profile);
